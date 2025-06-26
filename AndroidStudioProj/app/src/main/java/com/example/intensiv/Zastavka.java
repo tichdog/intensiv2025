@@ -1,5 +1,6 @@
 package com.example.intensiv;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -25,8 +26,19 @@ public class Zastavka extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 clickCount = clickCount + 1;
-                someIdTextView.setText(messages[clickCount]);
+                if (clickCount == 5){
+                    startMainActivity();
+                }
+                else {
+                    someIdTextView.setText(messages[clickCount]);
+                }
             }
         });
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(Zastavka.this, MainActivity.class);
+        startActivity(intent);
+        finish(); // Закрываем текущую активность
     }
 }
