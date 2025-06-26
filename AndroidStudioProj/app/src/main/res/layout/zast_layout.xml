@@ -2,68 +2,88 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_background">
 
-    <!-- Все элементы теперь используют ConstraintLayout -->
+    <!-- Горизонтальные направляющие -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_middle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <!-- Основные элементы -->
+    <FrameLayout
+        android:id="@+id/rectangle_1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/dialog"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintTop_toTopOf="@id/guideline_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
+
+        <TextView
+            android:id="@+id/some_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Пусто"
+            android:textAppearance="@style/zast_text_upper"
+            android:gravity="top|center_horizontal"
+            android:fontFamily="@font/kyivtypetitling1"
+            android:lineHeight="29sp"
+            android:padding="16dp"
+            android:scrollbars="vertical"
+            android:overScrollMode="never"/>
+    </FrameLayout>
+
+    <View
+        android:id="@+id/dog"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/dog"
+        app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintDimensionRatio="1:1.45"
+        app:layout_constraintTop_toTopOf="@id/guideline_middle"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="8dp"/>
+
     <TextView
         android:id="@+id/bottom_text"
-        android:layout_width="289dp"
-        android:layout_height="60dp"
-        android:text="Пусто"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Нажмите на экран, чтобы продолжить"
         android:textAppearance="@style/zast_text_bottom"
         android:gravity="center"
         android:fontFamily="@font/kyivtypetitling1"
         android:lineHeight="30sp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="50dp"/>
-
-    <View
-        android:id="@+id/dog"
-        android:layout_width="249dp"
-        android:layout_height="361dp"
-        android:background="@drawable/dog"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="313dp"/>
-
-    <View
-        android:id="@+id/rectangle_1"
-        android:layout_width="323dp"
-        android:layout_height="185dp"
-        android:background="@drawable/rectangle_1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="118dp"
-        android:layout_marginStart="42dp"/>
-
-    <View
-        android:id="@+id/vector_3"
-        android:layout_width="101.5dp"
-        android:layout_height="117.5dp"
-        android:background="@drawable/vector_3"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="273dp"
-        android:layout_marginStart="263dp"/>
-
-    <TextView
-        android:id="@+id/some_id"
-        android:layout_width="289dp"
-        android:layout_height="158dp"
-        android:text="Пусто"
-        android:textAppearance="@style/zast_text_upper"
-        android:gravity="center"
-        android:fontFamily="@font/kyivtypetitling1"
-        android:lineHeight="29sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="129dp"
-        android:layout_marginStart="61dp"/>
+        app:layout_constraintWidth_max="400dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

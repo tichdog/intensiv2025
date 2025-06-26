@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Intensiv</string>
+    <string-array name="zastavka_array">
+        <item>Гав-гав! О, ты наконец пришёл!</item>
+        <item>Я столько лет ждала того, кто сможет помочь.</item>
+        <item>Видишь это кольцо у меня в зубах? Оно не простое...</item>
+        <item>Чувствую, за ним тянется ледяной след.</item>
+        <item>Пойдём, узнаем его историю!</item>
+    </string-array>
 </resources>
