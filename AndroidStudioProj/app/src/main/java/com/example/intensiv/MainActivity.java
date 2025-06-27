@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.TypedValue;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -31,7 +32,7 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        applyTheme();
+        setOurTheme();
         super.onCreate(savedInstanceState);
 
 
@@ -45,6 +46,7 @@ public class MainActivity extends FragmentActivity {
 
         btNav = findViewById(R.id.bottom_nav);
         setupBottomNavigation();
+        btNav.setSelectedItemId(R.id.nav_map);
         mapView = findViewById(R.id.mapView);
         mapView.setTileSource(TileSourceFactory.MAPNIK); // Используем стандартные тайлы OSM
         mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
@@ -95,8 +97,8 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    private void applyTheme() {
-        String theme = PreferenceManager.getDefaultSharedPreferences(this)
+    private void setOurTheme() {
+        String theme = android.preference.PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("app_theme", "light");
 
         if (theme.equals("dark")) {
@@ -121,6 +123,7 @@ public class MainActivity extends FragmentActivity {
 //                return true;
             } else if (id == R.id.nav_settings) {
                 startActivity(new Intent(this, Settings.class));
+                overridePendingTransition(0, 0);
                 return true;
             }
             return false;
@@ -131,6 +134,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        btNav.setSelectedItemId(R.id.nav_map);
         mapView.onResume();
     }
 

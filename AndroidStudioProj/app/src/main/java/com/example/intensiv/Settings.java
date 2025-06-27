@@ -1,5 +1,6 @@
 package com.example.intensiv;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.RadioButton;
@@ -8,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class Settings extends AppCompatActivity {
+    private BottomNavigationView btNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +28,9 @@ public class Settings extends AppCompatActivity {
         }
 
         // Инициализация RadioGroup
+        btNav = findViewById(R.id.bottom_nav_1);
+        setupBottomNavigation();
+        btNav.setSelectedItemId(R.id.nav_settings);
         RadioGroup themeRadioGroup = findViewById(R.id.themeRadioGroup);
         RadioButton lightTheme = findViewById(R.id.lightTheme);
         RadioButton darkTheme = findViewById(R.id.darkTheme);
@@ -43,7 +50,13 @@ public class Settings extends AppCompatActivity {
             } else {
                 setThemeOur("light");
             }
-            recreate(); // Пересоздаем активность для применения темы
+            // Создаем интент для перезапуска активности
+            Intent intent = new Intent(this, Settings.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            overridePendingTransition(0, 0);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
         });
     }
 
@@ -67,6 +80,26 @@ public class Settings extends AppCompatActivity {
         } else {
             setTheme(R.style.Theme_App_Light);
         }
+    }
+
+    private void setupBottomNavigation() {
+        btNav.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_map) {
+                finish();
+                return true;
+//            } else if (id == R.id.nav_history) {
+//                startActivity(new Intent(this, HistoryActivity.class));
+//                return true;
+//            } else if (id == R.id.nav_tests) {
+//                startActivity(new Intent(this, TestsActivity.class));
+//                return true;
+            } else if (id == R.id.nav_settings) {
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
