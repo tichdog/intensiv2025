@@ -6,9 +6,12 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -24,9 +27,14 @@ public class MainActivity extends FragmentActivity {
     private MyLocationNewOverlay myLocationOverlay;
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
+    private BottomNavigationView btNav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        applyTheme();
         super.onCreate(savedInstanceState);
+
+
 
         // Настройка osmdroid
         Configuration.getInstance().setUserAgentValue(getPackageName());
@@ -34,6 +42,9 @@ public class MainActivity extends FragmentActivity {
                 getSharedPreferences(getPackageName() + "_preferences", Context.MODE_PRIVATE));
         setContentView(R.layout.activity_main);
 
+
+        btNav = findViewById(R.id.bottom_nav);
+        setupBottomNavigation();
         mapView = findViewById(R.id.mapView);
         mapView.setTileSource(TileSourceFactory.MAPNIK); // Используем стандартные тайлы OSM
         mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
@@ -83,6 +94,39 @@ public class MainActivity extends FragmentActivity {
             }
         }
     }
+
+    private void applyTheme() {
+        String theme = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("app_theme", "light");
+
+        if (theme.equals("dark")) {
+            setTheme(R.style.Theme_App_Dark);
+        } else {
+            setTheme(R.style.Theme_App_Light);
+        }
+    }
+
+
+    private void setupBottomNavigation() {
+        btNav.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_map) {
+                return true;
+//            } else if (id == R.id.nav_history) {
+//                startActivity(new Intent(this, HistoryActivity.class));
+//                return true;
+//            } else if (id == R.id.nav_tests) {
+//                startActivity(new Intent(this, TestsActivity.class));
+//                return true;
+            } else if (id == R.id.nav_settings) {
+                startActivity(new Intent(this, Settings.class));
+                return true;
+            }
+            return false;
+        });
+    }
+
 
     @Override
     protected void onResume() {

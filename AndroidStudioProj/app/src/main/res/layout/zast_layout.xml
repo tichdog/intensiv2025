@@ -5,7 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_background">
+    android:background="?attr/customBackground">
 
     <!-- Горизонтальные направляющие -->
     <androidx.constraintlayout.widget.Guideline
@@ -34,7 +34,7 @@
         android:id="@+id/rectangle_1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/dialog"
+        android:background="?attr/customDialog"
         app:layout_constraintWidth_percent="0.8"
         app:layout_constraintHeight_percent="0.3"
         app:layout_constraintTop_toTopOf="@id/guideline_top"
