@@ -2,8 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dark_background">#FF1D1B20</color>
     <!--Цвета для заставки-->
-    <color name="dark_background">#FF1D1B20</color>  <!-- Добавлен FF для непрозрачности -->
-    <color name="dialog_background">#6F6F9A</color>  <!-- Исправлено на один # -->
-    <color name="bottom_text">#FF535353</color>     <!-- Добавлен FF -->
+    <color name="dialog_background">#6F6F9A</color>
+    <color name="bottom_text">#FF535353</color>
 </resources>
