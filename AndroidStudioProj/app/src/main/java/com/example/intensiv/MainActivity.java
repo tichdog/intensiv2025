@@ -1,5 +1,6 @@
 package com.example.intensiv;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -23,7 +24,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
     private MapView mapView;
     private MyLocationNewOverlay myLocationOverlay;
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;

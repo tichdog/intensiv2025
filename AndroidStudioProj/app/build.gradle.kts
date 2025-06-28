@@ -33,6 +33,8 @@ android {
 
 dependencies {
     implementation("org.osmdroid:osmdroid-android:6.1.16")
+    implementation("implementation 'androidx.recyclerview:recyclerview:1.3.2")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
