@@ -1,5 +1,6 @@
 package com.example.intensiv;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,23 +13,29 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.CustomZoomButtonsController;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import com.yandex.mapkit.Animation;
+import com.yandex.mapkit.MapKit;
+import com.yandex.mapkit.MapKitFactory;
+import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.layers.ObjectEvent;
+import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.MapObjectCollection;
+import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.user_location.UserLocationLayer;
+import com.yandex.mapkit.user_location.UserLocationObjectListener;
+import com.yandex.mapkit.user_location.UserLocationView;
+import com.yandex.mapkit.mapview.MapView;
 
 public class MainActivity extends AppCompatActivity {
-    private MapView mapView;
-    private MyLocationNewOverlay myLocationOverlay;
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
+
+    private MapView mapView;
+    private UserLocationLayer userLocationLayer;
+    private MapObjectCollection mapObjects;
     private BottomNavigationView btNav;
 
     @Override
@@ -36,24 +43,22 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
         setOurTheme();
         super.onCreate(savedInstanceState);
-
-
-
-        // Настройка osmdroid
-        Configuration.getInstance().setUserAgentValue(getPackageName());
-        Configuration.getInstance().load(this,
-                getSharedPreferences(getPackageName() + "_preferences", Context.MODE_PRIVATE));
+        MapKitFactory.setApiKey("352f8f4a-2b58-41cc-8fc1-edf5e9e75901");
+        MapKitFactory.initialize(this);
         setContentView(R.layout.activity_main);
-
-
-        btNav = findViewById(R.id.bottom_nav);
-        setupBottomNavigation();
-        btNav.setSelectedItemId(R.id.nav_map);
         mapView = findViewById(R.id.mapView);
-        mapView.setTileSource(TileSourceFactory.MAPNIK); // Используем стандартные тайлы OSM
-        mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
-        mapView.setMultiTouchControls(true);
+        mapObjects = mapView.getMap().getMapObjects().addCollection();
 
+        CameraPosition position = new CameraPosition(
+                new Point(57.767689, 40.926422),
+                14,  // Zoom
+                0,   // Азимут
+                0    // Наклон
+        );
+        mapView.getMap().move(position, new Animation(Animation.Type.SMOOTH, 1), null);
+
+        setupUserLocationLayer();
+        addMarkers();
         // Запрос разрешений
         requestPermissionsIfNecessary(new String[] {
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -61,30 +66,56 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.INTERNET,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         });
+        btNav = findViewById(R.id.bottom_nav);
+        setupBottomNavigation();
+        btNav.setSelectedItemId(R.id.nav_map);
+    }
 
-        // Настройка отображения текущего местоположения
-        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
-        myLocationOverlay.enableMyLocation();
-        mapView.getOverlays().add(myLocationOverlay);
 
-        // Центрирование карты на начальной позиции
-        GeoPoint startPoint = new GeoPoint(57.767274, 40.926936); // Сусанинская площадь
-        mapView.getController().setCenter(startPoint);
-        mapView.getController().setZoom(17);
+    private void setupUserLocationLayer() {
+        // Получаем экземпляр MapKit
+        com.yandex.mapkit.MapKit mapKit = MapKitFactory.getInstance();
 
-        // Добавление маркеров
-        addMarkers();
+        // Создаем слой местоположения
+        userLocationLayer = mapKit.createUserLocationLayer(mapView.getMapWindow());
+        userLocationLayer.setVisible(true);
+        userLocationLayer.setHeadingEnabled(true);
     }
 
     private void addMarkers() {
-        // Маркер 1
-        GeoPoint point1 = new GeoPoint(57.767789, 40.927354); // Сусанинская площадь
-        Marker marker1 = new Marker(mapView);
-        marker1.setPosition(point1);
-        marker1.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        marker1.setTitle("Сусанинская площадь");
-        mapView.getOverlays().add(marker1);
+        // Метка 1 - Сусанинская площадь
+        Point susaninPoint = new Point(57.767274, 40.926936);
+        PlacemarkMapObject susaninMarker = mapObjects.addPlacemark(susaninPoint);
+        susaninMarker.setUserData("Сусанинская площадь");
+        susaninMarker.addTapListener((mapObject, point) -> {
+            showToast("Сусанинская площадь");
+            return true;
+        });
+
+        // Метка 2 - Пример другой точки
+        Point otherPoint = new Point(57.770000, 40.930000);
+        PlacemarkMapObject otherMarker = mapObjects.addPlacemark(otherPoint);
+        otherMarker.setUserData("Достопримечательность");
     }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MapKitFactory.getInstance().onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mapView.onStop();
+        MapKitFactory.getInstance().onStop();
+        super.onStop();
+    }
+
 
     private void requestPermissionsIfNecessary(String[] permissions) {
         for (String permission : permissions) {
@@ -129,19 +160,5 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        btNav.setSelectedItemId(R.id.nav_map);
-        mapView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
     }
 }

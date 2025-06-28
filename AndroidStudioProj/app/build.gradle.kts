@@ -34,7 +34,7 @@ android {
 dependencies {
     implementation("org.osmdroid:osmdroid-android:6.1.16")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-
+    implementation("com.yandex.android:maps.mobile:4.3.1-full")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -44,3 +44,4 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
+
