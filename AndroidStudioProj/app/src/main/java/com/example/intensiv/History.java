@@ -22,6 +22,7 @@ public class History extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(0, 0);
         setOurTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history);
@@ -31,6 +32,7 @@ public class History extends AppCompatActivity {
         setSupportActionBar(toolbar);
         btNav = findViewById(R.id.bottom_nav_1);
         setupBottomNavigation();
+        btNav.setSelectedItemId(R.id.nav_history);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -79,6 +81,7 @@ public class History extends AppCompatActivity {
 
             if (id == R.id.nav_map) {
                 finish();
+                overridePendingTransition(0, 0);
                 return true;
             } else if (id == R.id.nav_history) {
                 return true;
@@ -87,6 +90,7 @@ public class History extends AppCompatActivity {
 //                return true;
             } else if (id == R.id.nav_settings) {
                 finish();
+                overridePendingTransition(0, 0);
                 startActivity(new Intent(this, Settings.class));
                 return true;
             }
@@ -107,6 +111,7 @@ public class History extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         finish();
+        overridePendingTransition(0, 0);
         return true;
     }
 }
