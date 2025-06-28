@@ -89,9 +89,10 @@ public class Settings extends AppCompatActivity {
             if (id == R.id.nav_map) {
                 finish();
                 return true;
-//            } else if (id == R.id.nav_history) {
-//                startActivity(new Intent(this, HistoryActivity.class));
-//                return true;
+            } else if (id == R.id.nav_history) {
+                finish();
+                startActivity(new Intent(this, History.class));
+                return true;
 //            } else if (id == R.id.nav_tests) {
 //                startActivity(new Intent(this, TestsActivity.class));
 //                return true;

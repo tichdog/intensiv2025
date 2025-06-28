@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_history"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/kyivtypetitling1"
+        android:lineHeight="28sp"
+        android:layout_weight="1"
+        android:text="Название"
+        android:textAppearance="@style/history_nazv" />
+
+
+    <!-- Описание -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="3">
+
+        <TextView
+            android:id="@+id/opis"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/kyivtypetitling1"
+            android:layout_weight="2"
+            android:lineHeight="19sp"
+            android:text="Описание"
+            android:textAppearance="@style/history_opis" />
+
+        <TextView
+            android:id="@+id/percentage_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:fontFamily="@font/kyivtypetitling1"
+            android:lineHeight="30sp"
+            android:text="50%"
+            android:textAppearance="@style/history_percentage" />
+    </LinearLayout>
+    <!-- Дополнительный View (если нужен) -->
+    <!--    <View-->
+    <!--        android:id="@+id/some_id_1"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:layout_gravity="end"-->
+    <!--        android:layout_marginTop="16dp"-->
+    <!--        android:layout_weight="1" />-->
+
+</LinearLayout>

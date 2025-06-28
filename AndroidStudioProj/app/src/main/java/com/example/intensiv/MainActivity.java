@@ -116,15 +116,14 @@ public class MainActivity extends AppCompatActivity {
 
             if (id == R.id.nav_map) {
                 return true;
-//            } else if (id == R.id.nav_history) {
-//                startActivity(new Intent(this, HistoryActivity.class));
-//                return true;
+            } else if (id == R.id.nav_history) {
+                startActivity(new Intent(this, History.class));
+                return true;
 //            } else if (id == R.id.nav_tests) {
 //                startActivity(new Intent(this, TestsActivity.class));
 //                return true;
             } else if (id == R.id.nav_settings) {
                 startActivity(new Intent(this, Settings.class));
-                overridePendingTransition(0, 0);
                 return true;
             }
             return false;
