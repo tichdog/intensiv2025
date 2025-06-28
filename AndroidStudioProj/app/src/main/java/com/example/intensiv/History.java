@@ -42,6 +42,8 @@ public class History extends AppCompatActivity {
         String[] storyTexts = {
                 "Призраки Сусанинской площади...",
                 "Тайны Костромского кремля...",
+                "Легенды старого моста...",
+                "Легенды старого моста...",
                 "Легенды старого моста..."
         };
 
@@ -64,15 +66,9 @@ public class History extends AppCompatActivity {
         TextView opisanie = card.findViewById(R.id.opis);
         textView.setText(text);
         progressBar.setText(String.valueOf(progress) + "%");
-        opisanie.setText("Пусто");
+        opisanie.setText("fdsffffffffffffffffffff fdsssssssssssssssss jkfhdsjkhfdskjhfjkdsh fhfdsjkhfkjdshfjsdf fdsfsdfdsfds пусто");
 
         // Убираем фиксированную ширину, теперь карточки растягиваются на всю ширину
-        ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,  // Ширина на весь экран
-                ViewGroup.LayoutParams.WRAP_CONTENT   // Высота по содержимому
-        );
-        params.setMargins(0, 0, 0, 16);
-        card.setLayoutParams(params);
 
         return card;
     }
