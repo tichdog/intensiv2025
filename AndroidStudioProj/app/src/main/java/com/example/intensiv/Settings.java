@@ -16,6 +16,7 @@ public class Settings extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(0, 0);
         setOurTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
@@ -88,9 +89,11 @@ public class Settings extends AppCompatActivity {
 
             if (id == R.id.nav_map) {
                 finish();
+                overridePendingTransition(0, 0);
                 return true;
             } else if (id == R.id.nav_history) {
                 finish();
+                overridePendingTransition(0, 0);
                 startActivity(new Intent(this, History.class));
                 return true;
 //            } else if (id == R.id.nav_tests) {
@@ -106,6 +109,7 @@ public class Settings extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         finish();
+        overridePendingTransition(0, 0);
         return true;
     }
 }

@@ -52,6 +52,7 @@
         <item name="textToolBarColor">@color/white</item>
         <item name="historyBackColor">#1D1B20</item>
         <item name="historyNazvColor">#A8A8F5</item>
+
     </style>
 
     <style name="ToolbarTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
