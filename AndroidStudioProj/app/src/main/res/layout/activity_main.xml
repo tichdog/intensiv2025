@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="@id/mapView"
         app:layout_constraintBottom_toBottomOf="@id/mapView"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
@@ -32,6 +32,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="labeled"
-        android:background="@color/dark_background"/>
+        android:background="?attr/menuColor"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

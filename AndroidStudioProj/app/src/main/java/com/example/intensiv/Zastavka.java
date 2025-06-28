@@ -2,6 +2,7 @@ package com.example.intensiv;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ public class Zastavka extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setOurTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zast_layout); // Укажите имя вашего XML-файла
 
@@ -34,6 +36,17 @@ public class Zastavka extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setOurTheme() {
+        String theme = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("app_theme", "light");
+
+        if (theme.equals("dark")) {
+            setTheme(R.style.Theme_App_Dark);
+        } else {
+            setTheme(R.style.Theme_App_Light);
+        }
     }
 
     private void startMainActivity() {
