@@ -10,4 +10,6 @@
     <attr name="settingtextcolor" format="reference|color"/>
     <attr name="toolBarColor" format="reference|color"/>
     <attr name="textToolBarColor" format="reference|color"/>
+    <attr name="historyBackColor" format="reference|color"/>
+    <attr name="historyNazvColor" format="reference|color"/>
 </resources>
