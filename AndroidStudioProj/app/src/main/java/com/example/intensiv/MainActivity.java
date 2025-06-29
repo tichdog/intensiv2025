@@ -116,6 +116,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    @Override
+    protected void onResume() {
+        btNav.setSelectedItemId(R.id.nav_map);
+        super.onResume();
+    }
+
 
     private void requestPermissionsIfNecessary(String[] permissions) {
         for (String permission : permissions) {

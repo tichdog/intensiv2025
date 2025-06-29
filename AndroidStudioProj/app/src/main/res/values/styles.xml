@@ -16,7 +16,7 @@
     <style name="Theme.App.Light" parent="Theme.MaterialComponents.NoActionBar">
         <item name="customBackground">#FFFFFFFF</item>
         <item name="customDialog">@drawable/dialog_light</item>
-        <item name="menuColor">#DEBC8F</item>
+        <item name="menuColor">#6464A9</item>
         <item name="menuMap">@drawable/ic_map_light</item>
         <item name="menuHistory">@drawable/ic_history_light</item>
         <item name="menuTests">@drawable/ic_tests_light</item>
@@ -26,10 +26,10 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="settingtextcolor">#554F5F</item>
-        <item name="toolBarColor">#DEBC8F</item>
+        <item name="toolBarColor">#6464A9</item>
         <item name="actionBarSize">70dp</item>
         <item name="textToolBarColor">@color/black</item>
-        <item name="historyBackColor">#E2CCAF</item>
+        <item name="historyBackColor">#BFBFFF</item>
         <item name="historyNazvColor">#2E3D50</item>
     </style>
 
@@ -37,7 +37,7 @@
     <style name="Theme.App.Dark" parent="Theme.MaterialComponents.NoActionBar">
         <item name="customBackground">#141118</item>
         <item name="customDialog">@drawable/dialog</item>
-        <item name="menuColor">#DEBC8F</item>
+        <item name="menuColor">#1D1B20</item>
         <item name="menuMap">@drawable/ic_map</item>
         <item name="menuHistory">@drawable/ic_history</item>
         <item name="menuTests">@drawable/ic_tests</item>
