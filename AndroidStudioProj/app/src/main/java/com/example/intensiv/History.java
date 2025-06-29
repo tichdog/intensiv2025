@@ -7,6 +7,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -66,9 +67,13 @@ public class History extends AppCompatActivity {
         TextView textView = card.findViewById(R.id.title_text);
         TextView progressBar = card.findViewById(R.id.percentage_text);
         TextView opisanie = card.findViewById(R.id.opis);
+        ImageButton img = card.findViewById(R.id.history_open);
+        img.setOnClickListener(v -> {overridePendingTransition(0, 0);
+            startActivity(new Intent(this, HistoryDescription.class));});
         textView.setText(text);
         progressBar.setText(String.valueOf(progress) + "%");
         opisanie.setText("fdsffffffffffffffffffff fdsssssssssssssssss jkfhdsjkhfdskjhfjkdsh fhfdsjkhfkjdshfjsdf fdsfsdfdsfds пусто");
+
 
         // Убираем фиксированную ширину, теперь карточки растягиваются на всю ширину
 

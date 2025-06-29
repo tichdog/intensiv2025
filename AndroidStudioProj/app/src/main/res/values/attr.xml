@@ -12,4 +12,6 @@
     <attr name="textToolBarColor" format="reference|color"/>
     <attr name="historyBackColor" format="reference|color"/>
     <attr name="historyNazvColor" format="reference|color"/>
+    <attr name="historyArr" format="reference"/>
+    <attr name="historyDescriptionNazvColor" format="reference|color"/>
 </resources>
