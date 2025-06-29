@@ -32,15 +32,40 @@
             android:text="FGDSFdsfds dfsdsfdsfdsfdsg fdgfdsgfdg dfsgfdsgfdsgdfsg fdgsdgdsfgdfsgsd"
             android:textAppearance="@style/history_opis" />
 
-        <TextView
-            android:id="@+id/percentage_text"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:fontFamily="@font/kyivtypetitling1"
-            android:gravity="center_horizontal"
-            android:lineHeight="30sp"
-            android:text="50%"
-            android:textAppearance="@style/history_percentage" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/percentage_text"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/kyivtypetitling1"
+                android:gravity="center_horizontal"
+                android:lineHeight="30sp"
+                android:text="50%"
+                android:textAppearance="@style/history_percentage" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/history_opem"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    android:background="?attr/historyArr"
+                    android:padding="8dp" />
+            </FrameLayout>
+
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
