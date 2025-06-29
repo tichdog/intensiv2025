@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:fontFamily="@font/kyivtypetitling1"
-        app:title="Настройки темы"
+        app:title="Настройки"
         style="@style/CustomToolbarStyle"
         app:titleTextColor="?attr/textToolBarColor"/>
 

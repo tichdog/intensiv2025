@@ -96,6 +96,7 @@ public class HistoryDescription extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         overridePendingTransition(0, 0);
+        startActivity(new Intent(this, History.class));
         return true;
     }
 }
