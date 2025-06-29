@@ -9,6 +9,7 @@ import java.util.List;                  // Для работы со списко
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -18,9 +19,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -182,4 +185,24 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
     }
+
+    private void recreateBottomNavigation() {
+        ViewGroup parent = (ViewGroup) btNav.getParent();
+        int index = parent.indexOfChild(btNav);
+        parent.removeView(btNav);
+
+        // Создаем новый экземпляр
+        BottomNavigationView newBtNav = new BottomNavigationView(this);
+        newBtNav.setId(R.id.bottom_nav);
+
+        // Копируем параметры
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) btNav.getLayoutParams();
+        newBtNav.setLayoutParams(params);
+
+        // Применяем настройки
+        //setupBottomNavigationView(newBtNav);
+        parent.addView(newBtNav, index);
+        btNav = newBtNav;
+    }
+
 }

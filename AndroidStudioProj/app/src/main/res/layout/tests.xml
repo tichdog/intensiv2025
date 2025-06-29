@@ -48,7 +48,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:menu="@menu/bottom_nav_menu"
+        app:menu="@menu/bottom_nav_menu_light"
+        style="@style/BottomNavigationStyle"
         app:labelVisibilityMode="labeled"
+        app:itemIconTint="@drawable/bottom_nav_colors"
+        app:itemTextColor="@drawable/bottom_nav_colors"
+        app:itemRippleColor="?attr/menuItemColorActive"
         android:background="?attr/menuColor"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
