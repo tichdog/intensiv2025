@@ -1,5 +1,9 @@
 package com.example.intensiv;
-
+import com.example.intensiv.PointData;  // Ваш класс точки
+import com.example.intensiv.PointsData; // Ваш класс-контейнер
+import com.google.gson.Gson;            // Для парсинга JSON
+import java.io.InputStreamReader;       // Для чтения файла
+import java.util.List;                  // Для работы со списком
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -83,19 +87,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addMarkers() {
-        // Метка 1 - Сусанинская площадь
-        Point susaninPoint = new Point(57.767274, 40.926936);
-        PlacemarkMapObject susaninMarker = mapObjects.addPlacemark(susaninPoint);
-        susaninMarker.setUserData("Сусанинская площадь");
-        susaninMarker.addTapListener((mapObject, point) -> {
-            showToast("Сусанинская площадь");
-            return true;
-        });
+        try {
+            // Загрузка JSON
+            InputStreamReader reader = new InputStreamReader(getAssets().open("points.json"));
+            PointsData data = new Gson().fromJson(reader, PointsData.class);
+            List<PointData> points = data.getPoints();
 
-        // Метка 2 - Пример другой точки
-        Point otherPoint = new Point(57.770000, 40.930000);
-        PlacemarkMapObject otherMarker = mapObjects.addPlacemark(otherPoint);
-        otherMarker.setUserData("Достопримечательность");
+            // Добавление маркеров
+            for (PointData point : points) {
+                Point yandexPoint = new Point(point.getLat(), point.getLng());
+                PlacemarkMapObject marker = mapObjects.addPlacemark(yandexPoint);
+                marker.setUserData(point.getTitle());
+                marker.addTapListener((mapObject, p) -> {
+                    showToast(point.getTitle());
+                    return true;
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showToast("Ошибка загрузки точек");
+        }
     }
 
     private void showToast(String message) {
