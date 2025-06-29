@@ -63,18 +63,18 @@ public class Tests extends AppCompatActivity {
         Context context = parent.getContext();
 
         View card = LayoutInflater.from(context)
-                .inflate(R.layout.item_story, parent, false);
+                .inflate(R.layout.item_test, parent, false);
 
         // Настройка элементов карточки (без изменений)
         TextView textView = card.findViewById(R.id.title_text);
         TextView progressBar = card.findViewById(R.id.percentage_text);
         TextView opisanie = card.findViewById(R.id.opis);
-        ImageButton img = card.findViewById(R.id.history_open);
-        img.setOnClickListener(v -> {overridePendingTransition(0, 0);
-            startActivity(new Intent(this, HistoryDescription.class));});
+//        ImageButton img = card.findViewById(R.id.history_open);
+//        img.setOnClickListener(v -> {overridePendingTransition(0, 0);
+//            startActivity(new Intent(this, HistoryDescription.class));});
         textView.setText(text);
         progressBar.setText(String.valueOf(progress) + "%");
-        opisanie.setText("fdsffffffffffffffffffff fdsssssssssssssssss jkfhdsjkhfdskjhfjkdsh fhfdsjkhfkjdshfjsdf fdsfsdfdsfds пусто");
+        opisanie.setText("Тест из 5-ти вопросов");
 
 
         // Убираем фиксированную ширину, теперь карточки растягиваются на всю ширину
