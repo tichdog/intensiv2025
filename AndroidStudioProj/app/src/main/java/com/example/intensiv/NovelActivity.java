@@ -45,6 +45,7 @@ public class NovelActivity extends AppCompatActivity {
 
         // Показать первую реплику главы
         showCurrentDialogue();
+
     }
     private void setOurTheme() {
         String theme = android.preference.PreferenceManager.getDefaultSharedPreferences(this)

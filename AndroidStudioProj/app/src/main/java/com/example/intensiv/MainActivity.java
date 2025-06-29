@@ -7,6 +7,7 @@ import com.google.gson.Gson;            // Для парсинга JSON
 import java.io.InputStreamReader;       // Для чтения файла
 import java.util.List;                  // Для работы со списком
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -56,8 +57,15 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
         setOurTheme();
         super.onCreate(savedInstanceState);
-        MapKitFactory.setApiKey("352f8f4a-2b58-41cc-8fc1-edf5e9e75901");
-        MapKitFactory.initialize(this);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        boolean initial = sharedPreferences.getBoolean("needInitial", true);
+        if(initial) {
+            MapKitFactory.setApiKey("352f8f4a-2b58-41cc-8fc1-edf5e9e75901");
+            MapKitFactory.initialize(this);
+        }
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("needInitial", true);
+        editor.apply();
         setContentView(R.layout.activity_main);
         mapView = findViewById(R.id.mapView);
         mapObjects = mapView.getMap().getMapObjects().addCollection();
@@ -82,6 +90,18 @@ public class MainActivity extends AppCompatActivity {
         btNav = findViewById(R.id.bottom_nav);
         setupBottomNavigation();
         btNav.setSelectedItemId(R.id.nav_map);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("needInitial", false);
+                editor.apply();
+                finish();
+                setEnabled(false);
+                MainActivity.super.onBackPressed();
+            }
+        });
     }
 
 
