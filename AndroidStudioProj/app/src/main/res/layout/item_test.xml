@@ -1,59 +1,92 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="15dp"
-    android:background="@drawable/back_history"
-    android:orientation="vertical"
-    android:padding="16dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Заголовок -->
-    <TextView
-        android:id="@+id/title_text"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/kyivtypetitling1"
-        android:lineHeight="28sp"
-        android:text="Название"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:layout_marginBottom="12dp"/>
+        android:layout_margin="15dp">
 
-    <!-- Горизонтальный контейнер для иконки и процентов -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="8dp">
 
-        <!-- Иконка статуса (уменьшенный размер) -->
         <ImageView
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:src="@drawable/test_no_complete"
-            android:layout_marginEnd="8dp"/>
-
-        <!-- Проценты -->
-        <TextView
-            android:id="@+id/percentage_text"
+            android:id="@+id/background"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/kyivtypetitling1"
-            android:gravity="end"
-            android:text="50%"
-            android:textColor="?attr/perecentTests"
-            android:textSize="20sp"/>
-    </LinearLayout>
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Описание -->
-    <TextView
-        android:id="@+id/opis"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/kyivtypetitling1"
-        android:text="Описание теста или дополнительная информация"
-        android:textColor="?attr/opisTests"
-        android:textSize="16sp"
-        android:background="@drawable/test_zaten"/>
-</LinearLayout>
+
+        <!-- Основной контент -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Заголовок -->
+            <TextView
+                android:id="@+id/title_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/kyivtypetitling1"
+                android:lineHeight="28sp"
+                android:text="Название"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <!-- Горизонтальный контейнер -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/test_no_complete" />
+
+                <TextView
+                    android:id="@+id/percentage_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kyivtypetitling1"
+                    android:gravity="end"
+                    android:text="50%"
+                    android:textColor="?attr/perecentTests"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <!-- Описание -->
+            <TextView
+                android:id="@+id/opis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/test_zaten"
+                android:fontFamily="@font/kyivtypetitling1"
+                android:lineHeight="20sp"
+                android:padding="4dp"
+                android:text="Описание теста или дополнительная информация"
+                android:textColor="?attr/opisTests"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
