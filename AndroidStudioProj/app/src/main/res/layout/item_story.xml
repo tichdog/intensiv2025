@@ -56,7 +56,7 @@
                 android:gravity="center">
 
                 <ImageButton
-                    android:id="@+id/history_opem"
+                    android:id="@+id/history_open"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="center"

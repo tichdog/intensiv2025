@@ -32,6 +32,7 @@
         <item name="historyBackColor">#BFBFFF</item>
         <item name="historyNazvColor">#2E3D50</item>
         <item name="historyArr">@drawable/history_arrow_light</item>
+        <item name="historyDescriptionNazvColor">#2B2338</item>
     </style>
 
     <!-- Тёмная тема -->
@@ -54,7 +55,7 @@
         <item name="historyBackColor">#1D1B20</item>
         <item name="historyNazvColor">#A8A8F5</item>
         <item name="historyArr">@drawable/history_arrow</item>
-
+        <item name="historyDescriptionNazvColor">#A8A8F5</item>
     </style>
 
     <style name="ToolbarTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
