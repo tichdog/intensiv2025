@@ -14,4 +14,6 @@
     <attr name="historyNazvColor" format="reference|color"/>
     <attr name="historyArr" format="reference"/>
     <attr name="historyDescriptionNazvColor" format="reference|color"/>
+    <attr name="perecentTests" format="reference|color"/>
+    <attr name="opisTests" format="reference|color"/>
 </resources>

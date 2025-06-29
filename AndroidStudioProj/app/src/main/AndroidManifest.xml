@@ -33,6 +33,10 @@
         <activity
             android:name=".History"
             android:exported="true"/>
+
+        <activity
+            android:name=".Tests"
+            android:exported="true"/>
         <activity
             android:name=".HistoryDescription"
             android:exported="true"/>

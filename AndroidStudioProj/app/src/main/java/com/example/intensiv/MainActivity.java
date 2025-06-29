@@ -1,9 +1,12 @@
 package com.example.intensiv;
+
 import com.example.intensiv.PointData;  // Ваш класс точки
 import com.example.intensiv.PointsData; // Ваш класс-контейнер
 import com.google.gson.Gson;            // Для парсинга JSON
+
 import java.io.InputStreamReader;       // Для чтения файла
 import java.util.List;                  // Для работы со списком
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -13,6 +16,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         setupUserLocationLayer();
         addMarkers();
         // Запрос разрешений
-        requestPermissionsIfNecessary(new String[] {
+        requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.INTERNET,
@@ -168,9 +172,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_history) {
                 startActivity(new Intent(this, History.class));
                 return true;
-//            } else if (id == R.id.nav_tests) {
-//                startActivity(new Intent(this, TestsActivity.class));
-//                return true;
+            } else if (id == R.id.nav_tests) {
+                startActivity(new Intent(this, Tests.class));
+                return true;
             } else if (id == R.id.nav_settings) {
                 startActivity(new Intent(this, Settings.class));
                 return true;
