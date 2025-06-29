@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Выберать тему"
+                android:text="Выбрать тему"
                 android:textSize="18sp"
                 android:textColor="?attr/settingtextcolor"
                 android:layout_marginBottom="8dp"/>
@@ -49,7 +49,8 @@
                 android:id="@+id/themeRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
 
                 <RadioButton
                     android:id="@+id/lightTheme"
@@ -68,6 +69,51 @@
                     android:text="Тёмная тема"
                     android:textSize="16sp"/>
             </RadioGroup>
+
+            <!-- Новый раздел с кнопками глав -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Главы истории"
+                android:textSize="18sp"
+                android:textColor="?attr/settingtextcolor"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/chapter1_btn"
+                    style="@style/ChapterButtonStyle"
+                    android:text="1. Встреча у памятника Бобке"/>
+
+                <Button
+                    android:id="@+id/chapter2_btn"
+                    style="@style/ChapterButtonStyle"
+                    android:text="2. Сусанинская площадь"/>
+
+                <Button
+                    android:id="@+id/chapter3_btn"
+                    style="@style/ChapterButtonStyle"
+                    android:text="3. Памятник ювелиру"/>
+
+                <Button
+                    android:id="@+id/chapter4_btn"
+                    style="@style/ChapterButtonStyle"
+                    android:text="4. Памятник Любви"/>
+
+                <Button
+                    android:id="@+id/chapter5_btn"
+                    style="@style/ChapterButtonStyle"
+                    android:text="5. Дом на Дзержинского"/>
+
+                <Button
+                    android:id="@+id/chapter6_btn"
+                    style="@style/ChapterButtonStyle"
+                    android:text="6. Финал: Воссоединение"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

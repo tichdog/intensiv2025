@@ -40,7 +40,9 @@
         <activity
             android:name=".HistoryDescription"
             android:exported="true"/>
-
+        <activity
+            android:name=".NovelActivity"
+            android:exported="true"/>
         <activity
             android:name=".Zastavka"
             android:exported="true">

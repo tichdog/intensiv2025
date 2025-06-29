@@ -11,6 +11,15 @@
 
 
 
+    <style name="ChapterButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:textColor">?attr/settingtextcolor</item>
+        <item name="android:backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">12dp</item>
+    </style>
 
     <!-- Светлая тема -->
     <style name="Theme.App.Light" parent="Theme.MaterialComponents.NoActionBar">
