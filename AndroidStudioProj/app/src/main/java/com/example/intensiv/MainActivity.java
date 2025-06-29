@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView btNav;
 
     public static boolean themeChanged = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(0, 0);
@@ -137,15 +138,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         if (themeChanged) {
             updateTheme();
             themeChanged = false;
         }
         btNav.setSelectedItemId(R.id.nav_map);
-
+        super.onResume();
     }
-
 
 
     private void updateTheme() {
@@ -178,11 +177,6 @@ public class MainActivity extends AppCompatActivity {
         btNav.setItemTextColor(colorStateList);
         btNav.setBackgroundColor(backgroundColor);
         btNav.setItemRippleColor(ColorStateList.valueOf(activeColor));
-
-        // Обновляем меню (если нужно разное для разных тем)
-        btNav.getMenu().clear();
-        overridePendingTransition(0, 0);
-        btNav.inflateMenu(R.menu.bottom_nav_menu_light);
     }
 
     private int getColorFromAttr(int attrResId) {
@@ -190,8 +184,6 @@ public class MainActivity extends AppCompatActivity {
         getTheme().resolveAttribute(attrResId, typedValue, true);
         return typedValue.data;
     }
-
-
 
 
     private void requestPermissionsIfNecessary(String[] permissions) {
