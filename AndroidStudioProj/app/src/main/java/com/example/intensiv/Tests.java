@@ -2,6 +2,7 @@ package com.example.intensiv;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -34,7 +35,7 @@ public class Tests extends AppCompatActivity {
         setSupportActionBar(toolbar);
         btNav = findViewById(R.id.bottom_nav_1);
         setupBottomNavigation();
-        btNav.setSelectedItemId(R.id.nav_history);
+        btNav.setSelectedItemId(R.id.nav_tests);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -48,7 +49,8 @@ public class Tests extends AppCompatActivity {
                 "Тайны Костромского кремля...",
                 "Легенды старого моста...",
                 "Легенды старого моста...",
-                "Легенды старого моста..."
+                "Легенды старого моста...",
+                "Легенды старого моста...",
         };
 
         // Добавляем карточки
@@ -64,6 +66,19 @@ public class Tests extends AppCompatActivity {
 
         View card = LayoutInflater.from(context)
                 .inflate(R.layout.item_test, parent, false);
+
+
+//        SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+//        boolean t1 = prefs.getBoolean("zastavka_proidena", false);
+//        if (t1) {
+//            startMainActivity();
+//        }
+//        else {
+//            prefs.edit().putBoolean("zastavka_proidena", true).apply();
+//        }
+
+
+
 
         // Настройка элементов карточки (без изменений)
         TextView textView = card.findViewById(R.id.title_text);
@@ -91,10 +106,11 @@ public class Tests extends AppCompatActivity {
                 overridePendingTransition(0, 0);
                 return true;
             } else if (id == R.id.nav_history) {
+                finish();
+                startActivity(new Intent(this, History.class));
                 return true;
-//            } else if (id == R.id.nav_tests) {
-//                startActivity(new Intent(this, TestsActivity.class));
-//                return true;
+            } else if (id == R.id.nav_tests) {
+                return true;
             } else if (id == R.id.nav_settings) {
                 finish();
                 overridePendingTransition(0, 0);

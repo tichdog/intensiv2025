@@ -88,6 +88,7 @@ public class History extends AppCompatActivity {
             intent.putExtra("image", point.getShow());  // Передаем имя файла изображения
             startActivity(intent);
             overridePendingTransition(0, 0);
+            finish();
         });
 
         return card;
@@ -103,9 +104,11 @@ public class History extends AppCompatActivity {
                 return true;
             } else if (id == R.id.nav_history) {
                 return true;
-//            } else if (id == R.id.nav_tests) {
-//                startActivity(new Intent(this, TestsActivity.class));
-//                return true;
+            } else if (id == R.id.nav_tests) {
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(new Intent(this, Tests.class));
+                return true;
             } else if (id == R.id.nav_settings) {
                 finish();
                 overridePendingTransition(0, 0);
