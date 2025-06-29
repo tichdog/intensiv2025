@@ -30,41 +30,19 @@
             android:fontFamily="@font/kyivtypetitling1"
             android:lineHeight="19sp"
             android:textAppearance="@style/history_opis" />
-
-        <LinearLayout
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:orientation="vertical">
+            android:layout_weight="2">
 
-            <TextView
-                android:id="@+id/percentage_text"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/kyivtypetitling1"
-                android:gravity="center_horizontal"
-                android:lineHeight="30sp"
-                android:text="50%"
-                android:textAppearance="@style/history_percentage" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:gravity="center">
-
-                <ImageButton
-                    android:id="@+id/history_open"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:padding="8dp" />
-            </FrameLayout>
-
-        </LinearLayout>
+            <ImageButton
+                android:id="@+id/history_open"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:background="@android:color/transparent"
+                android:padding="8dp" />
+        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

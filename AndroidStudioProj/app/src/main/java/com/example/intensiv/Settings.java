@@ -3,8 +3,6 @@ package com.example.intensiv;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,44 +51,16 @@ public class Settings extends AppCompatActivity {
             } else {
                 setThemeOur("light");
             }
-            recreateActivity();
+            // Создаем интент для перезапуска активности
+            Intent intent = new Intent(this, Settings.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            overridePendingTransition(0, 0);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
         });
-
-        // Инициализация кнопок глав
-        setupChapterButtons();
     }
 
-    private void setupChapterButtons() {
-        Button[] chapterButtons = {
-                findViewById(R.id.chapter1_btn),
-                findViewById(R.id.chapter2_btn),
-                findViewById(R.id.chapter3_btn),
-                findViewById(R.id.chapter4_btn),
-                findViewById(R.id.chapter5_btn),
-                findViewById(R.id.chapter6_btn)
-        };
-
-        for (int i = 0; i < chapterButtons.length; i++) {
-            final int chapterNumber = i + 1;
-            chapterButtons[i].setOnClickListener(v -> {
-                Intent intent = new Intent(Settings.this, NovelActivity.class);
-                intent.putExtra("chapter", chapterNumber);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            });
-        }
-    }
-
-    private void recreateActivity() {
-        Intent intent = new Intent(this, Settings.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(intent);
-        overridePendingTransition(0, 0);
-    }
-
-    // Остальные методы остаются без изменений
     private String getCurrentTheme() {
         return PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("app_theme", "light");
@@ -125,6 +95,10 @@ public class Settings extends AppCompatActivity {
                 finish();
                 overridePendingTransition(0, 0);
                 startActivity(new Intent(this, History.class));
+                return true;
+            } else if (id == R.id.nav_tests) {
+                finish();
+                startActivity(new Intent(this, Tests.class));
                 return true;
             } else if (id == R.id.nav_settings) {
                 return true;

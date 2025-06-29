@@ -10,13 +10,13 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="?attr/toolBarColor"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:fontFamily="@font/kyivtypetitling1"
-        app:title="Настройки темы"
+        app:title="Настройки"
         style="@style/CustomToolbarStyle"
         app:titleTextColor="?attr/textToolBarColor"/>
 
