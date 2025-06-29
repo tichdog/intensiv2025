@@ -16,6 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+
+import java.io.InputStreamReader;
+import java.util.List;
 
 public class History extends AppCompatActivity {
 
@@ -28,7 +32,6 @@ public class History extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history);
 
-        // Настройка Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         btNav = findViewById(R.id.bottom_nav_1);
@@ -38,44 +41,54 @@ public class History extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-
         LinearLayout container = findViewById(R.id.storiesContainer);
 
-        // Простые данные для историй
-        String[] storyTexts = {
-                "Призраки Сусанинской площади...",
-                "Тайны Костромского кремля...",
-                "Легенды старого моста...",
-                "Легенды старого моста...",
-                "Легенды старого моста..."
-        };
+        try {
+            // Загрузка данных из JSON
+            InputStreamReader reader = new InputStreamReader(getAssets().open("points.json"));
+            PointsData data = new Gson().fromJson(reader, PointsData.class);
+            List<PointData> points = data.getPoints();
 
-        // Добавляем карточки
-        for (String text : storyTexts) {
-            View storyCard = createStoryCard(text, 50, container); // 50% прогресс
-            container.addView(storyCard);
+            if (points != null) {
+                for (PointData point : points) {
+                    View storyCard = createStoryCard(point, container);
+                    container.addView(storyCard);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    // Создание одной карточки истории
-    private View createStoryCard(String text, int progress, ViewGroup parent) {
+    private View createStoryCard(PointData point, ViewGroup parent) {
         Context context = parent.getContext();
-        View card = LayoutInflater.from(context)
-                .inflate(R.layout.item_story, parent, false);
+        View card = LayoutInflater.from(context).inflate(R.layout.item_story, parent, false);
 
-        // Настройка элементов карточки (без изменений)
         TextView textView = card.findViewById(R.id.title_text);
-        TextView progressBar = card.findViewById(R.id.percentage_text);
         TextView opisanie = card.findViewById(R.id.opis);
         ImageButton img = card.findViewById(R.id.history_open);
-        img.setOnClickListener(v -> {overridePendingTransition(0, 0);
-            startActivity(new Intent(this, HistoryDescription.class));});
-        textView.setText(text);
-        progressBar.setText(String.valueOf(progress) + "%");
-        opisanie.setText("fdsffffffffffffffffffff fdsssssssssssssssss jkfhdsjkhfdskjhfjkdsh fhfdsjkhfkjdshfjsdf fdsfsdfdsfds пусто");
 
+        textView.setText(point.getTitle());
+        opisanie.setText(point.getShort());
+        // Загрузка изображения
+        int resId = context.getResources().getIdentifier(
+                point.getShow(),
+                "drawable",
+                context.getPackageName()
+        );
+        if (resId != 0) {
+            img.setImageResource(resId);
+        }
 
-        // Убираем фиксированную ширину, теперь карточки растягиваются на всю ширину
+        // Передача данных в HistoryDescription
+        img.setOnClickListener(v -> {
+            Intent intent = new Intent(this, HistoryDescription.class);
+            intent.putExtra("title", point.getTitle());
+            intent.putExtra("description", point.getDescription());
+            intent.putExtra("image", point.getShow());  // Передаем имя файла изображения
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        });
 
         return card;
     }
