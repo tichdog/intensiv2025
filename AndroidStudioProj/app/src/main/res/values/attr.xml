@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="customBackground" format="reference|color"/>
+    <attr name="customDialog" format="reference"/>
+    <attr name="menuColor" format="reference|color"/>
+    <attr name="menuMap" format="reference"/>
+    <attr name="menuHistory" format="reference"/>
+    <attr name="menuTests" format="reference"/>
+    <attr name="menuSettings" format="reference"/>
+    <attr name="settingtextcolor" format="reference|color"/>
+    <attr name="toolBarColor" format="reference|color"/>
+    <attr name="textToolBarColor" format="reference|color"/>
+    <attr name="historyBackColor" format="reference|color"/>
+    <attr name="historyNazvColor" format="reference|color"/>
+    <attr name="historyArr" format="reference"/>
+    <attr name="historyDescriptionNazvColor" format="reference|color"/>
+    <attr name="perecentTests" format="reference|color"/>
+    <attr name="opisTests" format="reference|color"/>
+</resources>

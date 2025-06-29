@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    android:background="@drawable/back_history"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Заголовок -->
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/kyivtypetitling1"
+        android:lineHeight="28sp"
+        android:text="Название"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Горизонтальный контейнер для иконки и процентов -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <!-- Иконка статуса (уменьшенный размер) -->
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:src="@drawable/test_no_complete"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- Проценты -->
+        <TextView
+            android:id="@+id/percentage_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/kyivtypetitling1"
+            android:gravity="end"
+            android:text="50%"
+            android:textColor="?attr/perecentTests"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <!-- Описание -->
+    <TextView
+        android:id="@+id/opis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/kyivtypetitling1"
+        android:text="Описание теста или дополнительная информация"
+        android:textColor="?attr/opisTests"
+        android:textSize="16sp"
+        android:background="@drawable/test_zaten"/>
+</LinearLayout>

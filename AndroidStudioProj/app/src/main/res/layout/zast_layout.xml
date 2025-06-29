@@ -5,7 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_background">
+    android:background="?attr/customBackground">
 
     <!-- Горизонтальные направляющие -->
     <androidx.constraintlayout.widget.Guideline
@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.15" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_middle"
@@ -34,7 +34,7 @@
         android:id="@+id/rectangle_1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/dialog"
+        android:background="?attr/customDialog"
         app:layout_constraintWidth_percent="0.8"
         app:layout_constraintHeight_percent="0.3"
         app:layout_constraintTop_toTopOf="@id/guideline_top"
@@ -44,6 +44,7 @@
         android:layout_marginEnd="8dp">
 
         <TextView
+            android:layout_marginTop="40dp"
             android:id="@+id/some_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -62,12 +63,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/dog"
-        app:layout_constraintWidth_percent="0.6"
-        app:layout_constraintDimensionRatio="1:1.45"
+        app:layout_constraintWidth_percent="0.9"
+        app:layout_constraintDimensionRatio="1:1.1"
         app:layout_constraintTop_toTopOf="@id/guideline_middle"
         app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="8dp"/>
+        android:layout_marginStart="0dp"/>
 
     <TextView
         android:id="@+id/bottom_text"
