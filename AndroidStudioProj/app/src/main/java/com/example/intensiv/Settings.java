@@ -48,6 +48,7 @@ public class Settings extends AppCompatActivity {
 
         // Обработчик изменения темы
         themeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            MainActivity.themeChanged = true;
             if (checkedId == R.id.darkTheme) {
                 setThemeOur("dark");
             } else {

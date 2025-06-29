@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private MapObjectCollection mapObjects;
     private BottomNavigationView btNav;
 
+    public static boolean themeChanged = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(0, 0);
@@ -136,9 +137,61 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        btNav.setSelectedItemId(R.id.nav_map);
         super.onResume();
+        if (themeChanged) {
+            updateTheme();
+            themeChanged = false;
+        }
+        btNav.setSelectedItemId(R.id.nav_map);
+
     }
+
+
+
+    private void updateTheme() {
+        setOurTheme(); // Переустанавливаем тему
+
+        // Обновляем BottomNavigationView
+        updateBottomNavigationColors();
+
+        // Обновляем другие элементы при необходимости
+    }
+
+    private void updateBottomNavigationColors() {
+        overridePendingTransition(0, 0);
+        // Получаем цвета из текущей темы
+        int activeColor = getColorFromAttr(R.attr.menuItemColorActive);
+        int inactiveColor = getColorFromAttr(R.attr.menuItemColor);
+        int backgroundColor = getColorFromAttr(R.attr.menuColor);
+
+        // Создаем ColorStateList для иконок и текста
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{-android.R.attr.state_checked}
+                },
+                new int[]{activeColor, inactiveColor}
+        );
+
+        // Применяем новые цвета
+        btNav.setItemIconTintList(colorStateList);
+        btNav.setItemTextColor(colorStateList);
+        btNav.setBackgroundColor(backgroundColor);
+        btNav.setItemRippleColor(ColorStateList.valueOf(activeColor));
+
+        // Обновляем меню (если нужно разное для разных тем)
+        btNav.getMenu().clear();
+        overridePendingTransition(0, 0);
+        btNav.inflateMenu(R.menu.bottom_nav_menu_light);
+    }
+
+    private int getColorFromAttr(int attrResId) {
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(attrResId, typedValue, true);
+        return typedValue.data;
+    }
+
+
 
 
     private void requestPermissionsIfNecessary(String[] permissions) {
@@ -204,5 +257,4 @@ public class MainActivity extends AppCompatActivity {
         parent.addView(newBtNav, index);
         btNav = newBtNav;
     }
-
 }
