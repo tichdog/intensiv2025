@@ -178,6 +178,7 @@ public class TestRun extends AppCompatActivity {
 
         // Обновление теста
         currentTest.setCompletionPercentage(percentage);
+        currentTest.setStatusImage("test_complete");
         saveTestsToFile(this);
 
         // Возврат к списку тестов
