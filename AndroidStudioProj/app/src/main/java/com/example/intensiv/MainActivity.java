@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -101,6 +102,15 @@ public class MainActivity extends AppCompatActivity {
                 setEnabled(false);
                 MainActivity.super.onBackPressed();
             }
+        });
+        // Находим кнопку меню
+        ImageView mapMenuButton = findViewById(R.id.map_menu);
+
+        // Устанавливаем обработчик клика
+        mapMenuButton.setOnClickListener(v -> {
+            // Создаем и показываем BottomMenu
+            BottomMenu bottomMenu = new BottomMenu();
+            bottomMenu.show(getSupportFragmentManager(), bottomMenu.getTag());
         });
     }
 
