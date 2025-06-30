@@ -87,6 +87,25 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="0dp"/>
+    <!-- Кнопка-стрелка для перехода -->
+
+    <ImageButton
+        android:id="@+id/next_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="?attr/historyArr"
+        android:contentDescription="Переход на следующий вопрос"
+        app:layout_constraintStart_toEndOf="@id/dog"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:adjustViewBounds="true"
+        android:rotation="-90"
+        app:layout_constraintTop_toTopOf="@id/dog"
+        app:layout_constraintBottom_toBottomOf="@id/dog"
+        android:visibility="invisible"
+        android:onClick="moveToNextQuestion"/>
 
     <GridLayout
         android:id="@+id/answers_grid"

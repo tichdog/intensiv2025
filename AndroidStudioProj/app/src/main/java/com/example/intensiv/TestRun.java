@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class TestRun extends AppCompatActivity {
     private TextView option1, option2, option3, option4;
     private TextView questionText;
     private int correctAnswer = 0;
+    private ImageButton next_button;
     private boolean answerCheked = false;
 
     @Override
@@ -96,12 +98,15 @@ public class TestRun extends AppCompatActivity {
         option2 = findViewById(R.id.option2);
         option3 = findViewById(R.id.option3);
         option4 = findViewById(R.id.option4);
+        next_button = findViewById(R.id.next_button);
 
         // Установка обработчиков для кнопок ответов
         View.OnClickListener answerClickListener = v -> {
             if (!answerCheked) {
                 answerCheked = true;
+                next_button.setVisibility(View.VISIBLE);
                 TextView selectedButton = (TextView) v;
+                questionText.setText(questionText.getText());
                 boolean check = checkAnswer(selectedButton.getText().toString());
 
                 // Для MaterialButton используем setBackgroundResource()
@@ -118,14 +123,6 @@ public class TestRun extends AppCompatActivity {
         option2.setOnClickListener(answerClickListener);
         option3.setOnClickListener(answerClickListener);
         option4.setOnClickListener(answerClickListener);
-
-        // Обработчик для перехода к следующему вопросу при нажатии на текст вопроса
-        questionText.setOnClickListener(v -> {
-            if (answerCheked) {
-                answerCheked = false;
-                moveToNextQuestion();
-            }
-        });
     }
 
     private void displayQuestion(int questionIndex) {
@@ -172,12 +169,16 @@ public class TestRun extends AppCompatActivity {
         return false;
     }
 
-    private void moveToNextQuestion() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < currentTest.getQuestions().size()) {
-            displayQuestion(currentQuestionIndex);
-        } else {
-            finishTest();
+    public void moveToNextQuestion(View view) {
+        if (answerCheked) {
+            answerCheked = false;
+            next_button.setVisibility(View.INVISIBLE);
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentTest.getQuestions().size()) {
+                displayQuestion(currentQuestionIndex);
+            } else {
+                finishTest();
+            }
         }
     }
 
