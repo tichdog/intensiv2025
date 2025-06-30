@@ -39,8 +39,10 @@ import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.RequestPoint;
 import com.yandex.mapkit.RequestPointType;
 import com.yandex.mapkit.transport.TransportFactory;
+import com.yandex.mapkit.transport.masstransit.FitnessOptions;
 import com.yandex.mapkit.transport.masstransit.PedestrianRouter;
 import com.yandex.mapkit.transport.masstransit.Route;
+import com.yandex.mapkit.transport.masstransit.RouteOptions;
 import com.yandex.mapkit.transport.masstransit.Session;
 import com.yandex.mapkit.transport.masstransit.TimeOptions;
 import com.yandex.mapkit.directions.DirectionsFactory;
@@ -233,19 +235,20 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
         RequestPoint startPoint = new RequestPoint(
                 start,
                 RequestPointType.WAYPOINT,
-                null, null
+                null, null, null
         );
 
         RequestPoint endPoint = new RequestPoint(
                 destination,
                 RequestPointType.WAYPOINT,
-                null, null
+                null, null, null
         );
 
         // Удаляем TransitOptions (не нужны для пешехода)
         pedestrianRouter.requestRoutes(
                 Arrays.asList(startPoint, endPoint),
                 new TimeOptions(null, null),
+                new RouteOptions(new FitnessOptions(false, false)), // 1. Если true, маршрутизатор будет стараться избегать крутых (по высоте) маршрутов. 2. Если да, маршрутизатор попытается избегать лестниц
                 new Session.RouteListener() {
                     @Override
                     public void onMasstransitRoutes(@NonNull List<Route> routes) {
@@ -260,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
 
                             // Добавляем маркер точки назначения
                             PlacemarkMapObject marker = mapObjects.addPlacemark(destination);
-                            //marker.setIcon(ImageProvider.fromResource(R.drawable.i));
+                            marker.setIcon(ImageProvider.fromResource(getApplicationContext(), R.drawable.ic_history_light, true));
                         }
                     }
 
