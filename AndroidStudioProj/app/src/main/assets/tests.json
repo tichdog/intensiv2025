@@ -51,12 +51,12 @@
             {
               "id": 3,
               "text": "Вариант 3",
-              "is_correct": true
+              "is_correct": false
             },
             {
               "id": 4,
               "text": "Вариант 4",
-              "is_correct": true
+              "is_correct": false
             }
           ]
         }

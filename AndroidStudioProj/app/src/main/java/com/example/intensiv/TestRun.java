@@ -2,21 +2,20 @@ package com.example.intensiv;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
-import com.google.gson.Gson;
+import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.common.api.Response;
+import com.google.gson.Gson;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.FileInputStream;
@@ -28,14 +27,15 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-
 public class TestRun extends AppCompatActivity {
     private BottomNavigationView btNav;
     private TestResponse response;
     private Test currentTest;
     private int currentQuestionIndex = 0;
-    private Button option1, option2, option3, option4;
+    private TextView option1, option2, option3, option4;
     private TextView questionText;
+    private int correctAnswer = 0;
+    private boolean answerCheked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +78,9 @@ public class TestRun extends AppCompatActivity {
         // Настройка нижней навигации
         btNav = findViewById(R.id.bottom_nav_1);
         setupBottomNavigation();
-        btNav.setSelectedItemId(R.id.nav_settings);
+        btNav.setSelectedItemId(R.id.nav_tests);
 
-        questionText = findViewById(R.id.some_id); // Нужно добавить в XML
+        questionText = findViewById(R.id.some_id);
 
         option1 = findViewById(R.id.option1);
         option2 = findViewById(R.id.option2);
@@ -89,15 +89,33 @@ public class TestRun extends AppCompatActivity {
 
         // Установка обработчиков для кнопок ответов
         View.OnClickListener answerClickListener = v -> {
-            Button selectedButton = (Button) v;
-            checkAnswer(selectedButton.getText().toString());
-            moveToNextQuestion();
+            if (!answerCheked) {
+                answerCheked = true;
+                TextView selectedButton = (TextView) v;
+                boolean check = checkAnswer(selectedButton.getText().toString());
+
+                // Для MaterialButton используем setBackgroundResource()
+                if (check) {
+                    selectedButton.setBackgroundResource(R.drawable.test_item_rectangle_correct);
+                } else {
+                    selectedButton.setBackgroundResource(R.drawable.test_item_rectangle_incorrect);
+                }
+            }
         };
 
+        option1.setOnClickListener(answerClickListener);
         option1.setOnClickListener(answerClickListener);
         option2.setOnClickListener(answerClickListener);
         option3.setOnClickListener(answerClickListener);
         option4.setOnClickListener(answerClickListener);
+
+        // Обработчик для перехода к следующему вопросу при нажатии на текст вопроса
+        questionText.setOnClickListener(v -> {
+            if (answerCheked) {
+                answerCheked = false;
+                moveToNextQuestion();
+            }
+        });
     }
 
     private void displayQuestion(int questionIndex) {
@@ -108,7 +126,7 @@ public class TestRun extends AppCompatActivity {
 
         Question question = currentTest.getQuestions().get(questionIndex);
 
-        // Установка номера вопроса и текста
+        // Установка текста вопроса
         questionText.setText(question.getText());
 
         // Установка вариантов ответов
@@ -117,17 +135,31 @@ public class TestRun extends AppCompatActivity {
         option2.setText(options.get(1).getText());
         option3.setText(options.get(2).getText());
         option4.setText(options.get(3).getText());
+
+        // Сброс фона кнопок к стандартному
+        resetButtonBackgrounds();
     }
 
-    private void checkAnswer(String selectedAnswer) {
+    private void resetButtonBackgrounds() {
+        option1.setBackgroundResource(R.drawable.test_item_rectangle);
+        option2.setBackgroundResource(R.drawable.test_item_rectangle);
+        option3.setBackgroundResource(R.drawable.test_item_rectangle);
+        option4.setBackgroundResource(R.drawable.test_item_rectangle);
+
+    }
+
+    private boolean checkAnswer(String selectedAnswer) {
         Question currentQuestion = currentTest.getQuestions().get(currentQuestionIndex);
         for (Option option : currentQuestion.getOptions()) {
-            if (option.getText().equals(selectedAnswer) && option.isCorrect()) {
-                // Правильный ответ
-                return;
+            if (option.getText().equals(selectedAnswer)) {
+                if (option.isCorrect()) {
+                    // Правильный ответ
+                    correctAnswer++;
+                    return true;
+                }
             }
         }
-        // Неправильный ответ
+        return false;
     }
 
     private void moveToNextQuestion() {
@@ -142,8 +174,7 @@ public class TestRun extends AppCompatActivity {
     private void finishTest() {
         // Расчет процента выполнения
         int totalQuestions = currentTest.getQuestions().size();
-        int correctAnswers = calculateCorrectAnswers();
-        int percentage = (int) ((correctAnswers / (float) totalQuestions) * 100);
+        int percentage = (int) ((correctAnswer / (float) totalQuestions) * 100);
 
         // Обновление теста
         currentTest.setCompletionPercentage(percentage);
@@ -153,12 +184,6 @@ public class TestRun extends AppCompatActivity {
         Intent intent = new Intent(this, Tests.class);
         startActivity(intent);
         finish();
-    }
-
-    private int calculateCorrectAnswers() {
-        // Здесь должна быть логика подсчета правильных ответов
-        // В текущей реализации всегда возвращаем 100% для примера
-        return currentTest.getQuestions().size();
     }
 
     // Остальные методы без изменений
@@ -187,10 +212,10 @@ public class TestRun extends AppCompatActivity {
                 startActivity(new Intent(this, History.class));
                 return true;
             } else if (id == R.id.nav_tests) {
-                finish();
-                startActivity(new Intent(this, Tests.class));
                 return true;
             } else if (id == R.id.nav_settings) {
+                finish();
+                startActivity(new Intent(this, Tests.class));
                 return true;
             }
             return false;

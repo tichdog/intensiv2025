@@ -6,4 +6,6 @@
     <!--Цвета для заставки-->
     <color name="dialog_background">#6F6F9A</color>
     <color name="bottom_text">#FF535353</color>
+    <color name="correct">#67A964</color>
+    <color name="incorrect">#8B3341</color>
 </resources>

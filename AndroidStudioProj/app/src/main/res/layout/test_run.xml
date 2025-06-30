@@ -105,41 +105,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.9">
 
-        <Button
+
+        <TextView
             android:id="@+id/option1"
-
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
             android:layout_rowWeight="1"
-            android:text="Выбор 1" />
+            android:text="Выбор 1"
+            android:gravity="center"
+            android:background="@drawable/test_item_rectangle"
+            android:padding="16dp"
+            android:textSize="24sp"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/inter"
+            />
 
-        <Button
+        <TextView
             android:id="@+id/option2"
-
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
             android:layout_rowWeight="1"
-            android:text="Выбор 2" />
+            android:text="Выбор 2"
+            android:gravity="center"
+            android:background="@drawable/test_item_rectangle"
+            android:padding="16dp"
+            android:fontFamily="@font/inter"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
 
-        <Button
+        <TextView
             android:id="@+id/option3"
-
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
             android:layout_rowWeight="1"
-            android:text="Выбор 3" />
+            android:text="Выбор 3"
+            android:gravity="center"
+            android:fontFamily="@font/inter"
+            android:background="@drawable/test_item_rectangle"
+            android:padding="16dp"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
 
-        <Button
+        <TextView
             android:id="@+id/option4"
-
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
             android:layout_rowWeight="1"
-            android:text="Выбор 4" />
+            android:fontFamily="@font/inter"
+            android:text="Выбор 4"
+            android:gravity="center"
+            android:background="@drawable/test_item_rectangle"
+            android:padding="16dp"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+
+
+
     </GridLayout>
 
     <!-- Нижнее меню -->
