@@ -1,10 +1,13 @@
 package com.example.intensiv;
 
+import static androidx.core.util.TimeUtils.formatDuration;
+
 import com.example.intensiv.PointData;  // Ваш класс точки
 import com.example.intensiv.PointsData; // Ваш класс-контейнер
 import com.google.gson.Gson;            // Для парсинга JSON
 
 import java.io.InputStreamReader;       // Для чтения файла
+import java.util.Arrays;
 import java.util.List;                  // Для работы со списком
 
 import androidx.activity.OnBackPressedCallback;
@@ -21,6 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.health.connect.LocalTimeRangeFilter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
@@ -32,23 +36,57 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKit;
 import com.yandex.mapkit.MapKitFactory;
+import com.yandex.mapkit.RequestPoint;
+import com.yandex.mapkit.RequestPointType;
+import com.yandex.mapkit.transport.TransportFactory;
+import com.yandex.mapkit.transport.masstransit.PedestrianRouter;
+import com.yandex.mapkit.transport.masstransit.Route;
+import com.yandex.mapkit.transport.masstransit.Session;
+import com.yandex.mapkit.transport.masstransit.TimeOptions;
+import com.yandex.mapkit.directions.DirectionsFactory;
+import com.yandex.mapkit.directions.driving.DrivingRoute;
+import com.yandex.mapkit.directions.driving.DrivingSession;
+import com.yandex.mapkit.directions.driving.VehicleType;
+import com.yandex.mapkit.geometry.BoundingBox;
+import com.yandex.mapkit.map.PolylineMapObject;
+import com.yandex.mapkit.transport.masstransit.FilterVehicleTypes;
+import com.yandex.mapkit.transport.TransportFactory;
+import com.yandex.mapkit.directions.driving.DrivingRouter;
+import com.yandex.mapkit.directions.driving.DrivingOptions;
+import com.yandex.mapkit.directions.driving.VehicleOptions;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.layers.ObjectEvent;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.map.MapObjectCollection;
 import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.transport.TransportFactory;
+import com.yandex.mapkit.transport.masstransit.MasstransitRouter;
+import com.yandex.mapkit.transport.masstransit.Route;
+
+import com.yandex.mapkit.transport.masstransit.TimeOptions;
+import com.yandex.mapkit.transport.masstransit.TransitOptions;
 import com.yandex.mapkit.user_location.UserLocationLayer;
 import com.yandex.mapkit.user_location.UserLocationObjectListener;
+
 import com.yandex.mapkit.user_location.UserLocationView;
 import com.yandex.mapkit.mapview.MapView;
+import com.yandex.runtime.Error;
+import com.yandex.runtime.image.ImageProvider;
+import com.yandex.mapkit.transport.masstransit.MasstransitRouter;
+import com.yandex.mapkit.transport.masstransit.Route;
+import com.yandex.mapkit.transport.masstransit.Session;
+import com.yandex.mapkit.transport.masstransit.TransitOptions;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements UserLocationObjectListener {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
-
-    private MapView mapView;
     private UserLocationLayer userLocationLayer;
+    private Point userLocation; // Текущее местоположение пользователя
+    private PedestrianRouter pedestrianRouter; // Заменяем MasstransitRouter
+
     private MapObjectCollection mapObjects;
+    private MapView mapView;
     private BottomNavigationView btNav;
 
     public static boolean themeChanged = false;
@@ -60,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
         boolean initial = sharedPreferences.getBoolean("needInitial", true);
-        if(initial) {
+        if (initial) {
             MapKitFactory.setApiKey("352f8f4a-2b58-41cc-8fc1-edf5e9e75901");
             MapKitFactory.initialize(this);
         }
@@ -79,8 +117,12 @@ public class MainActivity extends AppCompatActivity {
         );
         mapView.getMap().move(position, new Animation(Animation.Type.SMOOTH, 1), null);
 
+
+        pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter(); // Инициализация
         setupUserLocationLayer();
         addMarkers();
+
+
         // Запрос разрешений
         requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -116,37 +158,120 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setupUserLocationLayer() {
-        // Получаем экземпляр MapKit
-        com.yandex.mapkit.MapKit mapKit = MapKitFactory.getInstance();
-
-        // Создаем слой местоположения
+        MapKit mapKit = MapKitFactory.getInstance();
         userLocationLayer = mapKit.createUserLocationLayer(mapView.getMapWindow());
         userLocationLayer.setVisible(true);
         userLocationLayer.setHeadingEnabled(true);
+        userLocationLayer.setObjectListener(this); // Устанавливаем слушатель
+    }
+
+    // Обработчик обновления местоположения
+    @Override
+    public void onObjectAdded(@NonNull UserLocationView userLocationView) {
+        this.userLocation = userLocationView.getPin().getGeometry();
+        buildRouteToFirstPoint();
+    }
+
+    @Override
+    public void onObjectRemoved(@NonNull UserLocationView userLocationView) {
+    }
+
+    @Override
+    public void onObjectUpdated(@NonNull UserLocationView userLocationView, @NonNull ObjectEvent objectEvent) {
+        this.userLocation = userLocationView.getPin().getGeometry();
+        buildRouteToFirstPoint();
     }
 
     private void addMarkers() {
         try {
-            // Загрузка JSON
             InputStreamReader reader = new InputStreamReader(getAssets().open("points.json"));
             PointsData data = new Gson().fromJson(reader, PointsData.class);
             List<PointData> points = data.getPoints();
 
-            // Добавление маркеров
-            for (PointData point : points) {
-                Point yandexPoint = new Point(point.getLat(), point.getLng());
+            if (!points.isEmpty()) {
+                // Добавляем маркер для первой точки
+                PointData firstPoint = points.get(0);
+                Point yandexPoint = new Point(firstPoint.getLat(), firstPoint.getLng());
+
                 PlacemarkMapObject marker = mapObjects.addPlacemark(yandexPoint);
-                marker.setUserData(point.getTitle());
-                marker.addTapListener((mapObject, p) -> {
-                    showToast(point.getTitle());
-                    return true;
-                });
+                //marker.setIcon(ImageProvider.fromResource(R.drawable.ic_target));
+                marker.setUserData(firstPoint.getTitle());
+
+                // Строим маршрут, когда будет известно местоположение пользователя
+                if (userLocation != null && userLocation.getLatitude() != 0 && userLocation.getLongitude() != 0) {
+                    buildPedestrianRoute(yandexPoint);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
             showToast("Ошибка загрузки точек");
         }
     }
+
+
+    private void buildRouteToFirstPoint() {
+        try {
+            InputStreamReader reader = new InputStreamReader(getAssets().open("points.json"));
+            PointsData data = new Gson().fromJson(reader, PointsData.class);
+            List<PointData> points = data.getPoints();
+
+            if (!points.isEmpty() && userLocation != null && userLocation.getLatitude() != 0 && userLocation.getLongitude() != 0) {
+                Point destination = new Point(points.get(0).getLat(), points.get(0).getLng());
+                buildPedestrianRoute(destination);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void buildPedestrianRoute(Point destination) {
+        mapObjects.clear();
+        Point start = userLocation; // Используем текущее местоположение пользователя
+
+        // Создаем точки маршрута
+        RequestPoint startPoint = new RequestPoint(
+                start,
+                RequestPointType.WAYPOINT,
+                null, null
+        );
+
+        RequestPoint endPoint = new RequestPoint(
+                destination,
+                RequestPointType.WAYPOINT,
+                null, null
+        );
+
+        // Удаляем TransitOptions (не нужны для пешехода)
+        pedestrianRouter.requestRoutes(
+                Arrays.asList(startPoint, endPoint),
+                new TimeOptions(null, null),
+                new Session.RouteListener() {
+                    @Override
+                    public void onMasstransitRoutes(@NonNull List<Route> routes) {
+                        if (!routes.isEmpty() && !routes.get(0).getGeometry().getPoints().isEmpty()) {
+                            // Отображение маршрута
+                            PolylineMapObject routeLine = mapObjects.addPolyline(routes.get(0).getGeometry());
+                            routeLine.setStrokeColor(ContextCompat.getColor(
+                                    MainActivity.this,
+                                    R.color.incorrect // Используем подходящий цвет
+                            ));
+                            routeLine.setStrokeWidth(3);
+
+                            // Добавляем маркер точки назначения
+                            PlacemarkMapObject marker = mapObjects.addPlacemark(destination);
+                            //marker.setIcon(ImageProvider.fromResource(R.drawable.i));
+                        }
+                    }
+
+                    @Override
+                    public void onMasstransitRoutesError(@NonNull Error error) {
+                        //showToast("Ошибка построения маршрута: " + error.getMessage());
+                    }
+                }
+        );
+    }
+
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
