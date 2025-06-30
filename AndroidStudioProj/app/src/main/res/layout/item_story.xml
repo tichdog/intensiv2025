@@ -37,8 +37,8 @@
 
             <ImageButton
                 android:id="@+id/history_open"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 android:background="@android:color/transparent"

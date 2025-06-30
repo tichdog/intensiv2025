@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 
 
@@ -23,6 +25,11 @@ import androidx.preference.Preference;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -39,7 +46,7 @@ public class Tests extends AppCompatActivity {
         overridePendingTransition(0, 0);
         setOurTheme();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.history);
+        setContentView(R.layout.tests);
 
         // Настройка Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -65,7 +72,7 @@ public class Tests extends AppCompatActivity {
 //        };
 
         // Добавляем карточки
-        for (Test test : response.test) {
+        for (Test test : response.getTest()) {
             View storyCard = createTestCard(container, test); // 50% прогресс
             container.addView(storyCard);
         }
@@ -109,9 +116,10 @@ public class Tests extends AppCompatActivity {
             img_background.setImageResource(resId1);
         }
 
-//        img_background.setOnClickListener(v -> {
-//
-//                });
+        img_background.setOnClickListener(v -> {
+            test.setCompletionPercentage(test.getCompletionPercentage() + 10);
+            saveTestsToFile(this);
+        });
         // Убираем фиксированную ширину, теперь карточки растягиваются на всю ширину
 
         return card;
@@ -119,17 +127,42 @@ public class Tests extends AppCompatActivity {
 
     private void loadTestData() {
         try {
-            InputStream is = getAssets().open("tests.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String json = new String(buffer, StandardCharsets.UTF_8);
-            response = new Gson().fromJson(json, TestResponse.class);
-        } catch (Exception e) {
+            FileInputStream fis = openFileInput("tests.json");
+            InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+            response = new Gson().fromJson(isr, TestResponse.class);
+            isr.close();
+        } catch (FileNotFoundException e) {
+            // Если файл не найден, можно загрузить данные из assets
+            try {
+                InputStream is = getAssets().open("tests.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                String json = new String(buffer, StandardCharsets.UTF_8);
+                response = new Gson().fromJson(json, TestResponse.class);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void saveTestsToFile(Context context) {
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(response);
+
+            FileOutputStream fos = context.openFileOutput("tests.json", Context.MODE_PRIVATE);
+            fos.write(json.getBytes(StandardCharsets.UTF_8));
+            fos.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void setupBottomNavigation() {
         btNav.setOnNavigationItemSelectedListener(item -> {
@@ -172,146 +205,5 @@ public class Tests extends AppCompatActivity {
         overridePendingTransition(0, 0);
         return true;
     }
-
-
-    class Test {
-        private int id;
-        private String title;
-        private String description;
-        private int completion_percentage;
-        private String background_image;
-        private String status_image;
-        private List<Question> questions;
-
-        // Геттеры и сеттеры
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public int getCompletionPercentage() {
-            return completion_percentage;
-        }
-
-        public void setCompletionPercentage(int completion_percentage) {
-            this.completion_percentage = completion_percentage;
-        }
-
-        public String getBackgroundImage() {
-            return background_image;
-        }
-
-        public void setBackgroundImage(String background_image) {
-            this.background_image = background_image;
-        }
-
-        public String getStatusImage() {
-            return status_image;
-        }
-
-        public void setStatusImage(String status_image) {
-            this.status_image = status_image;
-        }
-
-        public List<Question> getQuestions() {
-            return questions;
-        }
-
-        public void setQuestions(List<Question> questions) {
-            this.questions = questions;
-        }
-    }
-
-    class Question {
-        private int id;
-        private String text;
-        private List<Option> options;
-
-        // Геттеры и сеттеры
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public void setText(String text) {
-            this.text = text;
-        }
-
-        public List<Option> getOptions() {
-            return options;
-        }
-
-        public void setOptions(List<Option> options) {
-            this.options = options;
-        }
-    }
-
-    class Option {
-        private int id;
-        private String text;
-        private boolean is_correct;
-
-        // Геттеры и сеттеры
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public void setText(String text) {
-            this.text = text;
-        }
-
-        public boolean isCorrect() {
-            return is_correct;
-        }
-
-        public void setCorrect(boolean is_correct) {
-            this.is_correct = is_correct;
-        }
-    }
-
-    class TestResponse {
-        private List<Test> test;
-
-        public List<Test> getTest() {
-            return test;
-        }
-
-        public void setTest(List<Test> test) {
-            this.test = test;
-        }
-    }
 }
+
