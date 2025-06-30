@@ -61,16 +61,6 @@ public class Tests extends AppCompatActivity {
 
         LinearLayout container = findViewById(R.id.storiesContainer);
 
-//        // Простые данные для историй
-//        String[] storyTexts = {
-//                "Призраки Сусанинской площади...",
-//                "Тайны Костромского кремля...",
-//                "Легенды старого моста...",
-//                "Легенды старого моста...",
-//                "Легенды старого моста...",
-//                "Легенды старого моста...",
-//        };
-
         // Добавляем карточки
         for (Test test : response.getTest()) {
             View storyCard = createTestCard(container, test); // 50% прогресс
@@ -117,8 +107,10 @@ public class Tests extends AppCompatActivity {
         }
 
         img_background.setOnClickListener(v -> {
-            test.setCompletionPercentage(test.getCompletionPercentage() + 10);
-            saveTestsToFile(this);
+            Intent intent1 = new Intent(this, TestRun.class);
+            intent1.putExtra("ID_test", test.getId());
+            finish();
+            startActivity(intent1);
         });
         // Убираем фиксированную ширину, теперь карточки растягиваются на всю ширину
 
@@ -144,20 +136,6 @@ public class Tests extends AppCompatActivity {
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveTestsToFile(Context context) {
-        try {
-            Gson gson = new Gson();
-            String json = gson.toJson(response);
-
-            FileOutputStream fos = context.openFileOutput("tests.json", Context.MODE_PRIVATE);
-            fos.write(json.getBytes(StandardCharsets.UTF_8));
-            fos.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }

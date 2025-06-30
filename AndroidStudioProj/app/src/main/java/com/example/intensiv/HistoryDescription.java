@@ -60,8 +60,6 @@ public class HistoryDescription extends AppCompatActivity {
             public void handleOnBackPressed() {
                 finish();
                 overridePendingTransition(0, 0);
-                finish();
-                overridePendingTransition(0, 0);
                 startActivity(new Intent(HistoryDescription.this, History.class));
             }
         });

@@ -17,3 +17,5 @@
         android:icon="@drawable/ic_setting_light"
         android:title="Настройки"/>
 </menu>
+
+

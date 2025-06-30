@@ -4,7 +4,7 @@
       "id": 1,
       "title": "Собака Бобка",
       "description": "Описание теста или дополнительная информация",
-      "completion_percentage": 50,
+      "completion_percentage": 0,
       "background_image": "img",
       "status_image": "test_no_complete",
       "questions": [
@@ -26,6 +26,11 @@
               "id": 3,
               "text": "Вариант 3",
               "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Вариант 4",
+              "is_correct": false
             }
           ]
         },
@@ -41,6 +46,16 @@
             {
               "id": 2,
               "text": "Вариант 2",
+              "is_correct": true
+            },
+            {
+              "id": 3,
+              "text": "Вариант 3",
+              "is_correct": true
+            },
+            {
+              "id": 4,
+              "text": "Вариант 4",
               "is_correct": true
             }
           ]
@@ -51,7 +66,7 @@
       "id": 2,
       "title": "Сусанинская площадь",
       "description": "Описание теста или дополнительная информация",
-      "completion_percentage": 50,
+      "completion_percentage": 0,
       "background_image": "img",
       "status_image": "test_no_complete",
       "questions": [
@@ -73,6 +88,11 @@
               "id": 3,
               "text": "Вариант 3",
               "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Вариант 4",
+              "is_correct": false
             }
           ]
         },
@@ -89,6 +109,16 @@
               "id": 2,
               "text": "Вариант 2",
               "is_correct": true
+            },
+            {
+              "id": 3,
+              "text": "Вариант 3",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Вариант 4",
+              "is_correct": false
             }
           ]
         }
@@ -98,7 +128,7 @@
       "id": 3,
       "title": "Ювелир-Кустарь",
       "description": "Описание теста или дополнительная информация",
-      "completion_percentage": 50,
+      "completion_percentage": 0,
       "background_image": "img",
       "status_image": "test_no_complete",
       "questions": [
@@ -120,6 +150,11 @@
               "id": 3,
               "text": "Вариант 3",
               "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Вариант 4",
+              "is_correct": false
             }
           ]
         },
@@ -136,6 +171,16 @@
               "id": 2,
               "text": "Вариант 2",
               "is_correct": true
+            },
+            {
+              "id": 3,
+              "text": "Вариант 3",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Вариант 4",
+              "is_correct": false
             }
           ]
         }
