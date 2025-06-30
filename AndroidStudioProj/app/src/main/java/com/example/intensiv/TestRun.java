@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -65,6 +66,15 @@ public class TestRun extends AppCompatActivity {
         if (currentTest != null && !currentTest.getQuestions().isEmpty()) {
             displayQuestion(currentQuestionIndex);
         }
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(new Intent(TestRun.this, Tests.class));
+            }
+        });
     }
 
     private void initUI() {
@@ -216,7 +226,7 @@ public class TestRun extends AppCompatActivity {
                 return true;
             } else if (id == R.id.nav_settings) {
                 finish();
-                startActivity(new Intent(this, Tests.class));
+                startActivity(new Intent(this, Settings.class));
                 return true;
             }
             return false;
@@ -226,7 +236,7 @@ public class TestRun extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         finish();
-        startActivity(new Intent(this, History.class));
+        startActivity(new Intent(this, Tests.class));
         overridePendingTransition(0, 0);
         return true;
     }
