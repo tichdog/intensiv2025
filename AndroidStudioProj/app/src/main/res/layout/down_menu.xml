@@ -1,28 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="?attr/customBackground">
 
-    <!-- Ваши элементы меню здесь -->
-    <Button
-        android:id="@+id/btnOption1"
+    <!-- Заголовок -->
+    <TextView
+        android:id="@+id/stat_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Option 1"/>
+        android:text="Выбрана история:"
+        android:fontFamily="@font/kyivtypetitling1"
+        android:textAppearance="@style/history_nazv"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"/>
 
-    <Button
-        android:id="@+id/btnOption2"
+    <!-- Выбранная история -->
+    <TextView
+        android:id="@+id/chosen_story"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Option 2"/>
+        android:fontFamily="@font/kyivtypetitling1"
+        android:text="'Загадочное кольцо'"
+        android:textAppearance="@style/history_nazv"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"/>
 
+    <!-- Контейнер для карточек локаций -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/locations_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp"/>
+    </ScrollView>
+
+    <!-- Кнопка закрытия -->
     <Button
         android:id="@+id/btnClose"
         android:layout_width="match_parent"
+        android:fontFamily="@font/kyivtypetitling1"
         android:layout_height="wrap_content"
-        android:text="Close"/>
-
+        android:text="Закрыть"
+        android:layout_marginTop="16dp"
+        style="@style/ChapterButtonStyle"
+        android:textColor="?attr/settingtextcolor"/>
 </LinearLayout>
