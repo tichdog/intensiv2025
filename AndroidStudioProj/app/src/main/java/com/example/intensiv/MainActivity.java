@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
 
     private UserLocationLayer userLocationLayer;
     private Point userLocation; // Текущее местоположение пользователя
-    private MasstransitRouter masstransitRouter;
+    private PedestrianRouter pedestrianRouter; // Заменяем MasstransitRouter
 
     private MapObjectCollection mapObjects;
     private MapView mapView;
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
         mapView.getMap().move(position, new Animation(Animation.Type.SMOOTH, 1), null);
 
 
-        masstransitRouter = TransportFactory.getInstance().createMasstransitRouter();
+        pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter(); // Инициализация
         setupUserLocationLayer();
         addMarkers();
 
@@ -217,11 +217,11 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
 
     private void buildPedestrianRoute(Point destination) {
         mapObjects.clear();
-        Point p1 = new Point(57.761691, 40.928960);
+        Point start = userLocation; // Используем текущее местоположение пользователя
 
         // Создаем точки маршрута
         RequestPoint startPoint = new RequestPoint(
-                p1,
+                start,
                 RequestPointType.WAYPOINT,
                 null, null
         );
@@ -232,40 +232,31 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
                 null, null
         );
 
-        // Настройки для пешехода
-        TransitOptions transitOptions = new TransitOptions(
-                FilterVehicleTypes.NONE.value, // Фильтр транспорта (null - пешеход по умолчанию)
-                new TimeOptions(null, null)
-        );
-
-        masstransitRouter.requestRoutes(
+        // Удаляем TransitOptions (не нужны для пешехода)
+        pedestrianRouter.requestRoutes(
                 Arrays.asList(startPoint, endPoint),
-                transitOptions,
+                new TimeOptions(null, null),
                 new Session.RouteListener() {
                     @Override
                     public void onMasstransitRoutes(@NonNull List<Route> routes) {
-                        if (!routes.isEmpty()) {
-                            // Отображение маршрута зеленой линией
+                        if (!routes.isEmpty() && !routes.get(0).getGeometry().getPoints().isEmpty()) {
+                            // Отображение маршрута
                             PolylineMapObject routeLine = mapObjects.addPolyline(routes.get(0).getGeometry());
                             routeLine.setStrokeColor(ContextCompat.getColor(
                                     MainActivity.this,
-                                    R.color.incorrect
+                                    R.color.incorrect // Используем подходящий цвет
                             ));
-                            routeLine.setStrokeWidth(5);
+                            routeLine.setStrokeWidth(3);
 
-//                            // Расчет времени ходьбы
-//                            long minutes = (long) (routes.get(0).getMetadata().getWeight().getTime() / 60);
-//                            String duration = minutes > 60 ?
-//                                    (minutes / 60) + " ч " + (minutes % 60) + " мин" :
-//                                    minutes + " мин";
-//
-//                            showToast("Время ходьбы: " + duration);
+                            // Добавляем маркер точки назначения
+                            PlacemarkMapObject marker = mapObjects.addPlacemark(destination);
+                            //marker.setIcon(ImageProvider.fromResource(R.drawable.i));
                         }
                     }
 
                     @Override
                     public void onMasstransitRoutesError(@NonNull Error error) {
-                        //showToast("Ошибка: " + error.getMessage());
+                        //showToast("Ошибка построения маршрута: " + error.getMessage());
                     }
                 }
         );
