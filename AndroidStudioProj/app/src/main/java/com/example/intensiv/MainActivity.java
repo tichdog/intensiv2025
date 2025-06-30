@@ -250,23 +250,4 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
     }
-
-    private void recreateBottomNavigation() {
-        ViewGroup parent = (ViewGroup) btNav.getParent();
-        int index = parent.indexOfChild(btNav);
-        parent.removeView(btNav);
-
-        // Создаем новый экземпляр
-        BottomNavigationView newBtNav = new BottomNavigationView(this);
-        newBtNav.setId(R.id.bottom_nav);
-
-        // Копируем параметры
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) btNav.getLayoutParams();
-        newBtNav.setLayoutParams(params);
-
-        // Применяем настройки
-        //setupBottomNavigationView(newBtNav);
-        parent.addView(newBtNav, index);
-        btNav = newBtNav;
-    }
 }
