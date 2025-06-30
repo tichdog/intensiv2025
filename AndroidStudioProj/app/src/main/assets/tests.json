@@ -1,0 +1,145 @@
+{
+  "test": [
+    {
+      "id": 1,
+      "title": "Собака Бобка",
+      "description": "Описание теста или дополнительная информация",
+      "completion_percentage": 50,
+      "background_image": "img",
+      "status_image": "test_no_complete",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Текст вопроса 1",
+          "options": [
+            {
+              "id": 1,
+              "text": "Вариант 1",
+              "is_correct": true
+            },
+            {
+              "id": 2,
+              "text": "Вариант 2",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Вариант 3",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "text": "Текст вопроса 2",
+          "options": [
+            {
+              "id": 1,
+              "text": "Вариант 1",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Вариант 2",
+              "is_correct": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Сусанинская площадь",
+      "description": "Описание теста или дополнительная информация",
+      "completion_percentage": 50,
+      "background_image": "img",
+      "status_image": "test_no_complete",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Текст вопроса 1",
+          "options": [
+            {
+              "id": 1,
+              "text": "Вариант 1",
+              "is_correct": true
+            },
+            {
+              "id": 2,
+              "text": "Вариант 2",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Вариант 3",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "text": "Текст вопроса 2",
+          "options": [
+            {
+              "id": 1,
+              "text": "Вариант 1",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Вариант 2",
+              "is_correct": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Ювелир-Кустарь",
+      "description": "Описание теста или дополнительная информация",
+      "completion_percentage": 50,
+      "background_image": "img",
+      "status_image": "test_no_complete",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Текст вопроса 1",
+          "options": [
+            {
+              "id": 1,
+              "text": "Вариант 1",
+              "is_correct": true
+            },
+            {
+              "id": 2,
+              "text": "Вариант 2",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Вариант 3",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "text": "Текст вопроса 2",
+          "options": [
+            {
+              "id": 1,
+              "text": "Вариант 1",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Вариант 2",
+              "is_correct": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
