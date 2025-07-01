@@ -26,7 +26,7 @@ public class Zastavka extends AppCompatActivity {
         }
         setOurTheme();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.zast_layout); // Укажите имя вашего XML-файла
+        setContentView(R.layout.zast_layout);
 
         messages = getResources().getStringArray(R.array.zastavka_array);
 
@@ -38,7 +38,7 @@ public class Zastavka extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 clickCount = clickCount + 1;
-                if (clickCount == 5){
+                if (clickCount == 8){
                     startMainActivity();
                 }
                 else {

@@ -53,6 +53,6 @@
         android:layout_height="wrap_content"
         android:text="Закрыть"
         android:layout_marginTop="16dp"
-        style="@style/ChapterButtonStyle"
+        android:backgroundTint="#A8A8F5"
         android:textColor="?attr/settingtextcolor"/>
 </LinearLayout>
