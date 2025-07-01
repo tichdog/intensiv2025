@@ -72,7 +72,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private static final double MIN_DISTANCE_UPDATE = 10; // метров
-    private static final double TARGET_REACHED_DISTANCE = 30; // метров
+    private static final double TARGET_REACHED_DISTANCE = 15; // метров
 
     private UserLocationLayer userLocationLayer;
     private Point userLocation;
@@ -261,7 +261,14 @@ public class MainActivity extends AppCompatActivity {
         setupUserLocationLayer();
         loadPointsData();
         points = data.getPoints();
-        addAllMarkers();
+        for (PointData point : points) {
+            if(point.getComplete()){
+                currentTargetIndex++;
+            }
+        }
+        if (!points.isEmpty()) {
+            addAllMarkers();
+        }
     }
 
     private void setupUserLocationLayer() {

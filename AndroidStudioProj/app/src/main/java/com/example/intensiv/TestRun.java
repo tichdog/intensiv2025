@@ -3,9 +3,12 @@ package com.example.intensiv;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.TextPaint;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -107,7 +110,7 @@ public class TestRun extends AppCompatActivity {
                 answerCheked = true;
                 next_button.setVisibility(View.VISIBLE);
                 TextView selectedButton = (TextView) v;
-                questionText.setText(questionText.getText());
+
                 boolean check = checkAnswer(selectedButton.getText().toString());
 
                 // Для MaterialButton используем setBackgroundResource()
@@ -135,18 +138,47 @@ public class TestRun extends AppCompatActivity {
         Question question = currentTest.getQuestions().get(questionIndex);
 
         // Установка текста вопроса
-        questionText.setText(question.getText());
+        setAdaptiveTextByLength(questionText, question.getText());
 
         // Установка вариантов ответов
         List<Option> options = question.getOptions();
-        option1.setText(options.get(0).getText());
-        option2.setText(options.get(1).getText());
-        option3.setText(options.get(2).getText());
-        option4.setText(options.get(3).getText());
+        setAdaptiveTextByLength(option1, options.get(0).getText());
+        setAdaptiveTextByLength(option2, options.get(1).getText());
+        setAdaptiveTextByLength(option3, options.get(2).getText());
+        setAdaptiveTextByLength(option4, options.get(3).getText());
 
         // Сброс фона кнопок к стандартному
         resetButtonBackgrounds();
     }
+
+    private void setAdaptiveTextByLength(TextView textView, String text) {
+        // Устанавливаем базовые параметры
+        float baseSizeSp = 24f; // Базовый размер шрифта
+        float minSizeSp = 12f;  // Минимальный допустимый размер
+
+        // Определяем размер на основе длины текста
+        float newSizeSp;
+        if (text.length() < 20) {
+            newSizeSp = baseSizeSp; // Короткий текст - базовый размер
+        }
+        else if (text.length() < 40) {
+            newSizeSp = baseSizeSp - 2f; // Средний текст - немного меньше
+        }
+        else if (text.length() < 60) {
+            newSizeSp = baseSizeSp - 4f; // Длинный текст - еще меньше
+        }
+        else {
+            newSizeSp = baseSizeSp - 6f; // Очень длинный текст - минимально допустимый
+        }
+
+        // Гарантируем, что размер не меньше минимального
+        newSizeSp = Math.max(newSizeSp, minSizeSp);
+
+        // Устанавливаем размер
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, newSizeSp);
+        textView.setText(text);
+    }
+
 
     private void resetButtonBackgrounds() {
         option1.setBackgroundResource(R.drawable.test_item_rectangle);

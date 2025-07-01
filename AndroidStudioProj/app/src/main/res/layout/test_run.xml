@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/customBackground">
+    android:background="?attr/customBackground"
+    android:hyphenationFrequency="none">
 
 
     <!-- Горизонтальные направляющие -->
@@ -62,7 +63,7 @@
         android:layout_marginEnd="8dp">
 
         <TextView
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/some_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -73,7 +74,9 @@
             android:lineHeight="29sp"
             android:padding="16dp"
             android:scrollbars="vertical"
-            android:overScrollMode="never"/>
+            android:overScrollMode="never"
+            android:breakStrategy="high_quality"
+            android:hyphenationFrequency="fullFast"/>
     </FrameLayout>
 
     <View
@@ -138,6 +141,8 @@
             android:textSize="24sp"
             android:textColor="@android:color/white"
             android:fontFamily="@font/inter"
+            android:breakStrategy="high_quality"
+            android:hyphenationFrequency="fullFast"
             />
 
         <TextView
@@ -152,7 +157,9 @@
             android:padding="16dp"
             android:fontFamily="@font/inter"
             android:textSize="24sp"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:breakStrategy="high_quality"
+            android:hyphenationFrequency="fullFast"/>
 
         <TextView
             android:id="@+id/option3"
@@ -166,7 +173,9 @@
             android:background="@drawable/test_item_rectangle"
             android:padding="16dp"
             android:textSize="24sp"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:breakStrategy="high_quality"
+            android:hyphenationFrequency="fullFast"/>
 
         <TextView
             android:id="@+id/option4"
@@ -180,7 +189,9 @@
             android:background="@drawable/test_item_rectangle"
             android:padding="16dp"
             android:textSize="24sp"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:breakStrategy="high_quality"
+            android:hyphenationFrequency="fullFast"/>
 
 
 

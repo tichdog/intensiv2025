@@ -2,7 +2,7 @@
   "test": [
     {
       "id": 1,
-      "title": "Собака Бобка",
+      "title": "Встреча у памятника Бобке",
       "description": "Описание теста или дополнительная информация",
       "completion_percentage": 0,
       "background_image": "img",
@@ -10,52 +10,130 @@
       "questions": [
         {
           "id": 1,
-          "text": "Текст вопроса 1",
+          "text": "Что держал Бобка в зубах при первой встречи с тобой?",
           "options": [
             {
               "id": 1,
-              "text": "Вариант 1",
+              "text": "Кольцо",
               "is_correct": true
             },
             {
               "id": 2,
-              "text": "Вариант 2",
+              "text": "Кость",
               "is_correct": false
             },
             {
               "id": 3,
-              "text": "Вариант 3",
+              "text": "Газету",
               "is_correct": false
             },
             {
               "id": 4,
-              "text": "Вариант 4",
+              "text": "Тапки",
               "is_correct": false
             }
           ]
         },
         {
           "id": 2,
-          "text": "Текст вопроса 2",
+          "text": "Что тянется за кольцом?",
           "options": [
             {
               "id": 1,
-              "text": "Вариант 1",
+              "text": "Огненный след",
               "is_correct": false
             },
             {
               "id": 2,
-              "text": "Вариант 2",
+              "text": "Ледяной след",
               "is_correct": true
             },
             {
               "id": 3,
-              "text": "Вариант 3",
+              "text": "Вонючий след",
               "is_correct": false
             },
             {
               "id": 4,
-              "text": "Вариант 4",
+              "text": "Ужасающий след",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "text": "Какая профессия была у Бобки?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Полицейская",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Врач",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Пожарная",
+              "is_correct": true
+            },
+            {
+              "id": 4,
+              "text": "Учитель",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "text": "В каком году поставили памятник Бобке?",
+          "options": [
+            {
+              "id": 1,
+              "text": "В 2007",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "В 2009",
+              "is_correct": true
+            },
+            {
+              "id": 3,
+              "text": "В 2011",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "В 2012",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "text": "Какой писатель увековечил подвиги Бобки?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Леонид Колгушкин",
+              "is_correct": true
+            },
+            {
+              "id": 2,
+              "text": "Яков Аким",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Константин Абатуров",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Платон Ободовский",
               "is_correct": false
             }
           ]
@@ -72,52 +150,130 @@
       "questions": [
         {
           "id": 1,
-          "text": "Текст вопроса 1",
+          "text": "Призрака какого человека видят горожане на площади?",
           "options": [
             {
               "id": 1,
-              "text": "Вариант 1",
+              "text": "Ивана Сусанина",
               "is_correct": true
             },
             {
               "id": 2,
-              "text": "Вариант 2",
+              "text": "Николая II Романова",
               "is_correct": false
             },
             {
               "id": 3,
-              "text": "Вариант 3",
+              "text": "Николая Островского",
               "is_correct": false
             },
             {
               "id": 4,
-              "text": "Вариант 4",
+              "text": "Екатерины II",
               "is_correct": false
             }
           ]
         },
         {
           "id": 2,
-          "text": "Текст вопроса 2",
+          "text": "Какого царя спас Иван Сусанин?",
           "options": [
             {
               "id": 1,
-              "text": "Вариант 1",
+              "text": "Фёдор Алексеевич",
               "is_correct": false
             },
             {
               "id": 2,
-              "text": "Вариант 2",
-              "is_correct": true
+              "text": "Пётр Алексеевич",
+              "is_correct": false
             },
             {
               "id": 3,
-              "text": "Вариант 3",
+              "text": "Михаил Фёдорович",
+              "is_correct": true
+            },
+            {
+              "id": 4,
+              "text": "Алексей Михайлович",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "text": "Каких интервентов завёл в болота Иван Сусанин?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Австрийских",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Турецких",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Германских",
               "is_correct": false
             },
             {
               "id": 4,
-              "text": "Вариант 4",
+              "text": "Польских",
+              "is_correct": true
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "text": "Чей работы было кольцо, которое было у Бобки?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Тихона",
+              "is_correct": true
+            },
+            {
+              "id": 2,
+              "text": "Никиты",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Дмитрия",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Евгения",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "text": "Как называется площадь в обиходе у костромичей?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Бублик",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Блин",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Сковородка",
+              "is_correct": true
+            },
+            {
+              "id": 4,
+              "text": "Дырка от сыра",
               "is_correct": false
             }
           ]
@@ -134,52 +290,410 @@
       "questions": [
         {
           "id": 1,
-          "text": "Текст вопроса 1",
+          "text": "Какое условие наложил мастер на кольцо?",
           "options": [
             {
               "id": 1,
-              "text": "Вариант 1",
+              "text": "Тот, кто украдет его, лишится всего",
               "is_correct": true
             },
             {
               "id": 2,
-              "text": "Вариант 2",
+              "text": "Тот, кто завладеет кольцом, получит власть в городе",
               "is_correct": false
             },
             {
               "id": 3,
-              "text": "Вариант 3",
+              "text": "Тот, кто надевал его, получит проклятье",
               "is_correct": false
             },
             {
               "id": 4,
-              "text": "Вариант 4",
+              "text": "Тот, кто уничтожит его, станет хоббитом",
               "is_correct": false
             }
           ]
         },
         {
           "id": 2,
-          "text": "Текст вопроса 2",
+          "text": "Каким свойством обладало кольцо, которое создал ювелир?",
           "options": [
             {
               "id": 1,
-              "text": "Вариант 1",
+              "text": "Делало носителя невидимым",
               "is_correct": false
             },
             {
               "id": 2,
-              "text": "Вариант 2",
-              "is_correct": true
+              "text": "Открывало порталы",
+              "is_correct": false
             },
             {
               "id": 3,
-              "text": "Вариант 3",
+              "text": "Было просто красивым",
               "is_correct": false
             },
             {
               "id": 4,
-              "text": "Вариант 4",
+              "text": "Исполняло желания",
+              "is_correct": true
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "text": "Что нужно сделать с кольцом, чтобы оно принесло удачу?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Присвоить себе",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Прикоснуться к нему",
+              "is_correct": true
+            },
+            {
+              "id": 3,
+              "text": "Подышать на него",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Постоять рядом",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "text": "Какое кольцо узнал Бобка в ведении?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Ритуальное",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Обручальное",
+              "is_correct": true
+            },
+            {
+              "id": 3,
+              "text": "Золотое",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Всевластия",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "text": "К чему приурочили открытие памятника \"Ювелир-кустарь\"?",
+          "options": [
+            {
+              "id": 1,
+              "text": "1000-е кольцо проданное магазином \"Аметист\"",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Приезд президента РФ",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Пятилетие местного музея ювелирного искусства",
+              "is_correct": true
+            },
+            {
+              "id": 4,
+              "text": "100 лет со дня открытия первого ювелирного производства в Костромской области",
+              "is_correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Памятник Любви",
+      "description": "Описание теста или дополнительная информация",
+      "completion_percentage": 0,
+      "background_image": "img",
+      "status_image": "test_no_complete",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Что, согласно местной легенде, найдет незамужняя женщина, которая потрет камень и пролезет сквозь кольцо?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Она найдет проблемы",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Она найдет любовь",
+              "is_correct": true
+            },
+            {
+              "id": 3,
+              "text": "Она найдет богатство",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Она найдет",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "text": "Чего так долго ждала Ана?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Кольцо",
+              "is_correct": true
+            },
+            {
+              "id": 2,
+              "text": "Кость",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Газету",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Тапки",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "text": "Кому принадлежала старинная усадьба на Дзержинском?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Отцу Ани",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Отцу Гриши",
+              "is_correct": true
+            },
+            {
+              "id": 3,
+              "text": "Бабушке Ани",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Дедушке Гриши",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "text": "Что случилось после того, как Аня надела кольцо?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Исчезло пол-Костромы",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Произошло землетрясение",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Все покрылось льдом",
+              "is_correct": true
+            },
+            {
+              "id": 4,
+              "text": "Высохла река Волга",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "text": "Откуда едут женщины к камню?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Со всей России",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Из зарубежа",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Только из Костромской области",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Все вышеперечисленное",
+              "is_correct": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Дом на Дзержинского",
+      "description": "Описание теста или дополнительная информация",
+      "completion_percentage": 0,
+      "background_image": "img",
+      "status_image": "test_no_complete",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Что удивило женщину внутри дома на Дзержинском?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Неестественный пронизывающий холод в жаркие дни",
+              "is_correct": true
+            },
+            {
+              "id": 2,
+              "text": "Все картины лежат на полу",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "По этажам ходили призраки",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Не было живой души в комнатах",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "text": "Что находилось в этом доме?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Редакция газеты",
+              "is_correct": true
+            },
+            {
+              "id": 2,
+              "text": "Ресторан местной кухни",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "Магазин \"Аметист\"",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Корпус Костромского государственного университета",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "text": "Кто проклял кольцо?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Отец Ани",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Отец Гриши",
+              "is_correct": true
+            },
+            {
+              "id": 3,
+              "text": "Бабушка Ани",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Дедушка Гриши",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "text": "Где ждет Гришу Аня?",
+          "options": [
+            {
+              "id": 1,
+              "text": "На Сусанинской площади",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "У памятника ювелиру",
+              "is_correct": false
+            },
+            {
+              "id": 3,
+              "text": "У камня любви",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "У памятника Бобке",
+              "is_correct": true
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "text": "Что произошло в этом доме до революции из-за чего стали появляться всякие странности в здании?",
+          "options": [
+            {
+              "id": 1,
+              "text": "Во время стройки здания случайно замуровали строителя",
+              "is_correct": false
+            },
+            {
+              "id": 2,
+              "text": "Повесился сын хозяина",
+              "is_correct": true
+            },
+            {
+              "id": 3,
+              "text": "Стали призывать духов",
+              "is_correct": false
+            },
+            {
+              "id": 4,
+              "text": "Все выше перечисленное",
               "is_correct": false
             }
           ]
