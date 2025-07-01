@@ -2,6 +2,7 @@ package com.example.intensiv;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -55,7 +57,13 @@ import com.yandex.mapkit.user_location.UserLocationView;
 import com.yandex.runtime.Error;
 import com.yandex.runtime.image.ImageProvider;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +72,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private static final double MIN_DISTANCE_UPDATE = 10; // метров
-    private static final double TARGET_REACHED_DISTANCE = 15; // метров
+    private static final double TARGET_REACHED_DISTANCE = 30; // метров
 
     private UserLocationLayer userLocationLayer;
     private Point userLocation;
@@ -76,10 +84,13 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView btNav;
     private Point lastRoutePoint;
     private int currentTargetIndex = 0;
+    PointsData data;
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
-    private Map<Integer, PlacemarkMapObject> markers = new HashMap<>();
+
+    private boolean initial;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,10 +98,17 @@ public class MainActivity extends AppCompatActivity {
         setOurTheme();
         super.onCreate(savedInstanceState);
 
-        // Инициализация MapKit
-        MapKitFactory.setApiKey("352f8f4a-2b58-41cc-8fc1-edf5e9e75901");
-        MapKitFactory.initialize(this);
 
+        // Инициализация MapKit
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        boolean initial = sharedPreferences.getBoolean("needInitial", true);
+        if (initial) {
+            MapKitFactory.setApiKey("352f8f4a-2b58-41cc-8fc1-edf5e9e75901");
+            MapKitFactory.initialize(this);
+        }
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("needInitial", true);
+        editor.apply();
         setContentView(R.layout.activity_main);
         initViews();
         setupLocationServices();
@@ -98,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         setupBottomNavigation();
         setupBackPressHandler();
         setupMenuButton();
+        setupMyLocationButton();
     }
 
     private void initViews() {
@@ -161,14 +180,62 @@ public class MainActivity extends AppCompatActivity {
 
         if (calculateDistance(newLocation, currentTarget) <= TARGET_REACHED_DISTANCE) {
             showToast("Точка достигнута!");
-            currentTargetIndex++;
 
+            //Записываем в json файл
+            points.get(currentTargetIndex).setComplete(true);
+            data.setPoints(points);
+            savePointsToJson();
+
+            currentTargetIndex++;
             if (currentTargetIndex < points.size()) {
                 buildRouteToCurrentTarget();
             } else {
                 showToast("Маршрут завершен!");
             }
         }
+    }
+
+
+    private void setupMyLocationButton() {
+        ImageView btn = findViewById(R.id.my_location_1);
+        btn.setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Запрос разрешений
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_PERMISSIONS_REQUEST_CODE
+                );
+                return;
+            }
+
+            if (userLocation == null) {
+                // Однократный запрос текущей позиции
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(location -> {
+                            if (location != null) {
+                                userLocation = new Point(location.getLatitude(), location.getLongitude());
+                                moveCameraToUserLocation();
+                            }
+                        });
+            } else {
+                moveCameraToUserLocation();
+            }
+        });
+    }
+
+    private void moveCameraToUserLocation() {
+        mapView.getMap().move(
+                new CameraPosition(
+                        userLocation,  // Координаты пользователя
+                        17,           // Уровень зума (рекомендуется 15-19)
+                        0,            // Азимут (0 = север)
+                        0             // Наклон камеры (0 = вид сверху)
+                ),
+                new Animation(Animation.Type.SMOOTH, 1),  // Плавная анимация (1 сек)
+                null
+        );
     }
 
     private void updateRouteIfNeeded(Point newLocation) {
@@ -192,7 +259,9 @@ public class MainActivity extends AppCompatActivity {
 
         pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter();
         setupUserLocationLayer();
-        loadPointsFromJson();
+        loadPointsData();
+        points = data.getPoints();
+        addAllMarkers();
     }
 
     private void setupUserLocationLayer() {
@@ -202,44 +271,17 @@ public class MainActivity extends AppCompatActivity {
         userLocationLayer.setHeadingEnabled(false);
     }
 
-    private void loadPointsFromJson() {
-        try {
-            PointsData data = new Gson().fromJson(
-                    new InputStreamReader(getAssets().open("points.json")),
-                    PointsData.class
-            );
-            points = data.getPoints();
-            addAllMarkers();
-        } catch (Exception e) {
-            showToast("Ошибка загрузки точек");
-            e.printStackTrace();
-        }
-    }
 
     private void addAllMarkers() {
+
         mapObjects.clear();
-        markers.clear();
+        PointData point = points.get(currentTargetIndex);
+        Point yandexPoint = new Point(point.getLat(), point.getLng());
 
-        for (int i = 0; i < points.size(); i++) {
-            PointData point = points.get(i);
-            Point yandexPoint = new Point(point.getLat(), point.getLng());
+        PlacemarkMapObject marker = mapObjects.addPlacemark(yandexPoint);
+        marker.setIcon(ImageProvider.fromResource(this, R.drawable.ic_history_light));
+        marker.setUserData(point.getTitle());
 
-            PlacemarkMapObject marker = mapObjects.addPlacemark(yandexPoint);
-            marker.setIcon(getMarkerIcon(i));
-            marker.setUserData(point.getTitle());
-
-            markers.put(i, marker);
-        }
-    }
-
-    private ImageProvider getMarkerIcon(int index) {
-        if (index < currentTargetIndex) {
-            return ImageProvider.fromResource(this, R.drawable.ic_tests_light);
-        } else if (index == currentTargetIndex) {
-            return ImageProvider.fromResource(this, R.drawable.ic_history_light);
-        } else {
-            return ImageProvider.fromResource(this, R.drawable.ic_map_light);
-        }
     }
 
     private void buildRouteToCurrentTarget() {
@@ -257,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
         if (userLocation == null) return;
 
         RequestPoint startPoint = new RequestPoint(
-                userLocation, RequestPointType.WAYPOINT, null, null,null);
+                userLocation, RequestPointType.WAYPOINT, null, null, null);
         RequestPoint endPoint = new RequestPoint(
                 destination, RequestPointType.WAYPOINT, null, null, null);
 
@@ -389,14 +431,24 @@ public class MainActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("needInitial", false);
+                editor.apply();
                 finish();
+                setEnabled(false);
+                MainActivity.super.onBackPressed();
             }
         });
     }
 
     private void setupMenuButton() {
         findViewById(R.id.map_menu).setOnClickListener(v ->
-                new BottomMenu().show(getSupportFragmentManager(), "bottomMenu")
+                {
+                    BottomMenu bottomMenu = new BottomMenu();
+                    bottomMenu.setActivityContext(this); // Передаем контекст
+                    bottomMenu.show(getSupportFragmentManager(), "bottomMenu");
+                }
         );
     }
 
@@ -438,5 +490,45 @@ public class MainActivity extends AppCompatActivity {
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void savePointsToJson() {
+        try {
+            // Преобразуем обновленные данные в JSON
+            String updatedJson = new Gson().toJson(data);
+
+            // Записываем в файл
+            FileOutputStream fos = openFileOutput("points1.json", Context.MODE_PRIVATE);
+            fos.write(updatedJson.getBytes(StandardCharsets.UTF_8));
+            fos.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showToast("Ошибка сохранения прогресса");
+        }
+    }
+
+
+    private void loadPointsData() {
+        try {
+            FileInputStream fis = openFileInput("points1.json");
+            InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+            data = new Gson().fromJson(isr, PointsData.class);
+            isr.close();
+        } catch (FileNotFoundException e) {
+            try {
+                InputStream is = getAssets().open("points1.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                String json = new String(buffer, StandardCharsets.UTF_8);
+                data = new Gson().fromJson(json, PointsData.class);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

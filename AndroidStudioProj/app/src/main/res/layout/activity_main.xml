@@ -25,8 +25,19 @@
         android:contentDescription="Map icon"
         app:layout_constraintStart_toStartOf="@id/mapView"
         app:layout_constraintBottom_toBottomOf="@id/mapView"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginStart="21dp"
+        android:layout_marginBottom="21dp" />
+
+    <ImageView
+        android:id="@+id/my_location_1"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/button_location"
+        android:contentDescription="Map icon"
+        app:layout_constraintEnd_toEndOf="@id/mapView"
+        app:layout_constraintBottom_toBottomOf="@id/mapView"
+        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="21dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"

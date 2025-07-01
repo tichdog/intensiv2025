@@ -8,16 +8,20 @@ class PointData {
     private String description;
     private String shrt;
     private String show;
+    private Boolean complete;
 
     public int getId() {
         return id;
     }
+
     public String getShort() {
         return shrt;
     }
+
     public String getShow() {
         return show;
     }
+
     public String getTitle() {
         return title;
     }
@@ -29,7 +33,15 @@ class PointData {
     public double getLng() {
         return lng;
     }
-    public String getDescription(){
+
+    public String getDescription() {
         return description;
+    }
+
+    public Boolean getComplete() {
+        return complete;
+    }
+    public void setComplete(boolean f) {
+        complete = f;
     }
 }

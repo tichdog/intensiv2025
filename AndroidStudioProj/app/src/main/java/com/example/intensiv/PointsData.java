@@ -8,4 +8,8 @@ class PointsData {
     public List<PointData> getPoints() {
         return points;
     }
+
+    public void setPoints(List<PointData> f) {
+        points = f;
+    }
 }

@@ -47,6 +47,7 @@
         <item name="opisTests">#FFFFFF</item>
         <item name="menuItemColor">#1A212B</item>
         <item name="menuItemColorActive">#A0F4EF</item>
+        <item name="backHistAct">#8585FF</item>
     </style>
 
     <!-- Тёмная тема -->
@@ -70,6 +71,7 @@
         <item name="opisTests">#8181DD</item>
         <item name="menuItemColor">#FFFFFFCC</item>
         <item name="menuItemColorActive">#A8A8F5</item>
+        <item name="backHistAct">#6464A9</item>
     </style>
 
     <style name="ToolbarTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">

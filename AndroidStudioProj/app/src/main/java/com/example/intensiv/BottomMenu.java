@@ -1,18 +1,29 @@
 package com.example.intensiv;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.Gson;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class BottomMenu extends BottomSheetDialogFragment {
+    private Context activityContext;
+    private PointsData data;
+
 
     public BottomMenu() {
     }
@@ -26,9 +37,7 @@ public class BottomMenu extends BottomSheetDialogFragment {
         LinearLayout locationsContainer = view.findViewById(R.id.locations_container);
 
         try {
-            // Загружаем данные из JSON
-            InputStreamReader reader = new InputStreamReader(getContext().getAssets().open("points.json"));
-            PointsData data = new Gson().fromJson(reader, PointsData.class);
+            loadPointsData();
             List<PointData> points = data.getPoints();
 
             // Создаем карточки для каждой локации
@@ -38,6 +47,9 @@ public class BottomMenu extends BottomSheetDialogFragment {
                 TextView title = locationCard.findViewById(R.id.location_title);
                 TextView coords = locationCard.findViewById(R.id.location_coords);
 
+                if(point.getComplete()) {
+                    locationCard.setBackgroundResource(R.drawable.back_history_active);
+                }
                 title.setText(point.getTitle());
                 coords.setText(String.format("Координаты: %.6f, %.6f", point.getLat(), point.getLng()));
 
@@ -61,4 +73,32 @@ public class BottomMenu extends BottomSheetDialogFragment {
             getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         }
     }
+
+    public void setActivityContext(Context context) {
+        this.activityContext = context;
+    }
+
+    private void loadPointsData() {
+        try {
+            FileInputStream fis = activityContext.openFileInput("points1.json");
+            InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+            data = new Gson().fromJson(isr, PointsData.class);
+            isr.close();
+        } catch (FileNotFoundException e) {
+            try {
+                InputStream is = activityContext.getAssets().open("points1.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                String json = new String(buffer, StandardCharsets.UTF_8);
+                data = new Gson().fromJson(json, PointsData.class);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
