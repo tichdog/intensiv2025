@@ -66,12 +66,12 @@
           "options": [
             {
               "id": 1,
-              "text": "Полицейская",
+              "text": "Сыщик",
               "is_correct": false
             },
             {
               "id": 2,
-              "text": "Врач",
+              "text": "Кинолог",
               "is_correct": false
             },
             {
