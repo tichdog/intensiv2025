@@ -210,17 +210,10 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            if (userLocation == null) {
-                // Однократный запрос текущей позиции
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(location -> {
-                            if (location != null) {
-                                userLocation = new Point(location.getLatitude(), location.getLongitude());
-                                moveCameraToUserLocation();
-                            }
-                        });
-            } else {
+            if (userLocation != null) {
                 moveCameraToUserLocation();
+            } else {
+                Toast.makeText(this, "Местоположение неизвестно", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -262,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
         loadPointsData();
         points = data.getPoints();
         for (PointData point : points) {
-            if(point.getComplete()){
+            if (point.getComplete()) {
                 currentTargetIndex++;
             }
         }
