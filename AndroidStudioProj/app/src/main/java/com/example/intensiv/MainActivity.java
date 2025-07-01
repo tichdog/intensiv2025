@@ -178,9 +178,11 @@ public class MainActivity extends AppCompatActivity {
             currentTargetIndex++;
             if (currentTargetIndex < points.size()) {
                 buildRouteToCurrentTarget();
-            } else {
-                showToast("Маршрут завершен!");
             }
+            Intent intent = new Intent(MainActivity.this, NovelActivity.class);
+            intent.putExtra("chapter", currentTargetIndex);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
         }
     }
 

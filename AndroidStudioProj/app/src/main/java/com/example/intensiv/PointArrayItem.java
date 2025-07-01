@@ -10,6 +10,14 @@ public class PointArrayItem {
     private String show;
     private Boolean complete;
 
+    public PointArrayItem(int id, String title, double lat, double lng) {
+        this.id = id;
+        this.title = title;
+        this.lat = lat;
+        this.lng = lng;
+        this.complete = false;
+    }
+
     public int getId() {
         return id;
     }
@@ -41,7 +49,15 @@ public class PointArrayItem {
     public Boolean getComplete() {
         return complete;
     }
+
     public void setComplete(boolean f) {
         complete = f;
     }
+    public void setId(int id) { this.id = id; }
+    public void setTitle(String title) { this.title = title; }
+    public void setLat(double lat) { this.lat = lat; }
+    public void setLng(double lng) { this.lng = lng; }
+    public void setShow(String show) { this.show = show; }
+    public void setShrt(String shrt) { this.shrt = shrt; }
+    public void setDescription(String description) { this.description = description; }
 }

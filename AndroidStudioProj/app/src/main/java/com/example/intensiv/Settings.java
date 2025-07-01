@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
@@ -80,6 +81,11 @@ public class Settings extends AppCompatActivity {
                 overridePendingTransition(0, 0);
             });
         }
+        Button btn = findViewById(R.id.user_strory);
+        btn.setOnClickListener(v -> {
+            startActivity(new Intent(Settings.this, CreateRouteActivity.class));
+            finish();
+        });
     }
 
     private void recreateActivity() {
