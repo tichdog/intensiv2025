@@ -1,45 +1,48 @@
 package com.example.intensiv;
 
-import static androidx.core.util.TimeUtils.formatDuration;
-
-import com.example.intensiv.PointData;  // Ваш класс точки
-import com.example.intensiv.PointsData; // Ваш класс-контейнер
-import com.google.gson.Gson;            // Для парсинга JSON
-
-import java.io.InputStreamReader;       // Для чтения файла
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;                  // Для работы со списком
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
-import android.content.Context;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.health.connect.LocalTimeRangeFilter;
+import android.graphics.PointF;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKit;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.RequestPoint;
 import com.yandex.mapkit.RequestPointType;
+import com.yandex.mapkit.directions.driving.DrivingRoute;
+import com.yandex.mapkit.directions.driving.DrivingSession;
+import com.yandex.mapkit.directions.driving.VehicleOptions;
+import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.MapObjectCollection;
+import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.map.PolylineMapObject;
+import com.yandex.mapkit.mapview.MapView;
 import com.yandex.mapkit.transport.TransportFactory;
 import com.yandex.mapkit.transport.masstransit.FitnessOptions;
 import com.yandex.mapkit.transport.masstransit.PedestrianRouter;
@@ -47,189 +50,130 @@ import com.yandex.mapkit.transport.masstransit.Route;
 import com.yandex.mapkit.transport.masstransit.RouteOptions;
 import com.yandex.mapkit.transport.masstransit.Session;
 import com.yandex.mapkit.transport.masstransit.TimeOptions;
-import com.yandex.mapkit.directions.DirectionsFactory;
-import com.yandex.mapkit.directions.driving.DrivingRoute;
-import com.yandex.mapkit.directions.driving.DrivingSession;
-import com.yandex.mapkit.directions.driving.VehicleType;
-import com.yandex.mapkit.geometry.BoundingBox;
-import com.yandex.mapkit.map.PolylineMapObject;
-import com.yandex.mapkit.transport.masstransit.FilterVehicleTypes;
-import com.yandex.mapkit.transport.TransportFactory;
-import com.yandex.mapkit.directions.driving.DrivingRouter;
-import com.yandex.mapkit.directions.driving.DrivingOptions;
-import com.yandex.mapkit.directions.driving.VehicleOptions;
-import com.yandex.mapkit.geometry.Point;
-import com.yandex.mapkit.layers.ObjectEvent;
-import com.yandex.mapkit.map.CameraPosition;
-import com.yandex.mapkit.map.MapObjectCollection;
-import com.yandex.mapkit.map.PlacemarkMapObject;
-import com.yandex.mapkit.transport.TransportFactory;
-import com.yandex.mapkit.transport.masstransit.MasstransitRouter;
-import com.yandex.mapkit.transport.masstransit.Route;
-
-import com.yandex.mapkit.transport.masstransit.TimeOptions;
-import com.yandex.mapkit.transport.masstransit.TransitOptions;
 import com.yandex.mapkit.user_location.UserLocationLayer;
-import com.yandex.mapkit.user_location.UserLocationObjectListener;
-
 import com.yandex.mapkit.user_location.UserLocationView;
-import com.yandex.mapkit.mapview.MapView;
 import com.yandex.runtime.Error;
 import com.yandex.runtime.image.ImageProvider;
-import com.yandex.mapkit.transport.masstransit.MasstransitRouter;
-import com.yandex.mapkit.transport.masstransit.Route;
-import com.yandex.mapkit.transport.masstransit.Session;
-import com.yandex.mapkit.transport.masstransit.TransitOptions;
 
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements UserLocationObjectListener {
+public class MainActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+    private static final double MIN_DISTANCE_UPDATE = 10; // метров
+    private static final double TARGET_REACHED_DISTANCE = 15; // метров
 
     private UserLocationLayer userLocationLayer;
-    private Point userLocation; // Текущее местоположение пользователя
-    private PedestrianRouter pedestrianRouter; // Заменяем MasstransitRouter
+    private Point userLocation;
+    private PedestrianRouter pedestrianRouter;
+    public static boolean themeChanged = false;
     private List<PointData> points;
-
     private MapObjectCollection mapObjects;
-
     private MapView mapView;
     private BottomNavigationView btNav;
-
-    public static boolean themeChanged = false;
     private Point lastRoutePoint;
+    private int currentTargetIndex = 0;
 
-    private static final double MIN_DISTANCE_UPDATE = 10; // метров
-    private int currentTargetIndex = 0; // Индекс текущей целевой точки
-    private static final double TARGET_REACHED_DISTANCE = 15; // Расстояние срабатывания (метры)
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
+    private Map<Integer, PlacemarkMapObject> markers = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(0, 0);
         setOurTheme();
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
-        boolean initial = sharedPreferences.getBoolean("needInitial", true);
-        if (initial) {
-            MapKitFactory.setApiKey("352f8f4a-2b58-41cc-8fc1-edf5e9e75901");
-            MapKitFactory.initialize(this);
-        }
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("needInitial", true);
-        editor.apply();
+
+        // Инициализация MapKit
+        MapKitFactory.setApiKey("352f8f4a-2b58-41cc-8fc1-edf5e9e75901");
+        MapKitFactory.initialize(this);
+
         setContentView(R.layout.activity_main);
-        mapView = findViewById(R.id.mapView);
-        mapObjects = mapView.getMap().getMapObjects().addCollection();
-
-        CameraPosition position = new CameraPosition(
-                new Point(57.767689, 40.926422),
-                14,  // Zoom
-                0,   // Азимут
-                0    // Наклон
-        );
-        mapView.getMap().move(position, new Animation(Animation.Type.SMOOTH, 1), null);
-
-
-        pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter(); // Инициализация
-        setupUserLocationLayer();
-        addMarkers();
-
-
-        // Запрос разрешений
-        requestPermissionsIfNecessary(new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.INTERNET,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        });
-        btNav = findViewById(R.id.bottom_nav);
+        initViews();
+        setupLocationServices();
+        setupMap();
         setupBottomNavigation();
-        btNav.setSelectedItemId(R.id.nav_map);
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+        setupBackPressHandler();
+        setupMenuButton();
+    }
+
+    private void initViews() {
+        mapView = findViewById(R.id.mapView);
+        btNav = findViewById(R.id.bottom_nav);
+    }
+
+    private void setupLocationServices() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        createLocationCallback();
+        requestLocationPermissions();
+    }
+
+    private void createLocationCallback() {
+        locationCallback = new LocationCallback() {
             @Override
-            public void handleOnBackPressed() {
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("needInitial", false);
-                editor.apply();
-                finish();
-                setEnabled(false);
-                MainActivity.super.onBackPressed();
-            }
-        });
-        // Находим кнопку меню
-        ImageView mapMenuButton = findViewById(R.id.map_menu);
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) return;
 
-        // Устанавливаем обработчик клика
-        mapMenuButton.setOnClickListener(v -> {
-            // Создаем и показываем BottomMenu
-            BottomMenu bottomMenu = new BottomMenu();
-            bottomMenu.show(getSupportFragmentManager(), bottomMenu.getTag());
-        });
-    }
-
-
-    private void setupUserLocationLayer() {
-        MapKit mapKit = MapKitFactory.getInstance();
-        userLocationLayer = mapKit.createUserLocationLayer(mapView.getMapWindow());
-        userLocationLayer.setVisible(true);
-        userLocationLayer.setHeadingEnabled(true);
-        userLocationLayer.setObjectListener(this); // Устанавливаем слушатель
-    }
-
-    // Обработчик обновления местоположения
-    @Override
-    public void onObjectAdded(@NonNull UserLocationView userLocationView) {
-//        userLocationView.getPin().setIcon(
-//                ImageProvider.fromResource(this, R.drawable.ic_map_light)  // Иконка позиции!
-//        );
-//        userLocationView.getArrow().setIcon(
-//                ImageProvider.fromResource(this, R.drawable.ic_tests_light)   // Иконка направления (если используется компас)!
-//        );
-//
-//        // Настройка круга точности
-//        userLocationView.getAccuracyCircle().setFillColor(
-//                Color.argb(30, 0, 150, 0) // Полупрозрачный голубой
-//        );
-
-//        this.userLocation = userLocationView.getPin().getGeometry();
-//        buildRouteToFirstPoint();
-
-    }
-
-    @Override
-    public void onObjectRemoved(@NonNull UserLocationView userLocationView) {
-    }
-
-    @Override
-    public void onObjectUpdated(@NonNull UserLocationView userLocationView, @NonNull ObjectEvent objectEvent) {
-        Point newLocation = userLocationView.getPin().getGeometry();
-        this.userLocation = newLocation;
-
-        // Проверяем достижение текущей цели
-        if (currentTargetIndex < points.size()) {
-            Point currentTarget = new Point(
-                    points.get(currentTargetIndex).getLat(),
-                    points.get(currentTargetIndex).getLng()
-            );
-
-            double distance = calculateDistance(newLocation, currentTarget);
-            if (distance <= TARGET_REACHED_DISTANCE) {
-                showToast("Точка достигнута!");
-                currentTargetIndex++; // Переключаем на следующую точку
-
-                if (currentTargetIndex < points.size()) {
-                    buildRouteToCurrentTarget();
-                } else {
-                    showToast("Маршрут завершен!");
+                for (Location location : locationResult.getLocations()) {
+                    updateUserLocation(new Point(
+                            location.getLatitude(),
+                            location.getLongitude()
+                    ), location.getAccuracy());
                 }
             }
-        }
+        };
+    }
 
-        // Перестраиваем маршрут при значительном перемещении
+    private void updateUserLocation(Point newLocation, float accuracy) {
+        if (accuracy > 20) return; // Игнорируем неточные данные
+
+        this.userLocation = newLocation;
+//        updateUserMarkerPosition(newLocation);
+        checkTargetReached(newLocation);
+        updateRouteIfNeeded(newLocation);
+    }
+
+    private void updateUserMarkerPosition(Point newLocation) {
+        if (userLocationLayer != null) {
+            // Просто обновляем позицию без анимации, так как UserLocationLayer
+            // не предоставляет методов для анимации напрямую
+            userLocationLayer.resetAnchor();
+//            userLocationLayer.setAnchor(
+//                    new PointF((float)(mapView.getWidth() * 0.5),
+//                            (float)(mapView.getHeight() * 0.5)),
+//                    new PointF((float)(mapView.getWidth() * 0.5),
+//                            (float)(mapView.getHeight() * 0.83))
+//            );
+        }
+    }
+
+
+    private void checkTargetReached(Point newLocation) {
+        if (currentTargetIndex >= points.size()) return;
+
+        Point currentTarget = new Point(
+                points.get(currentTargetIndex).getLat(),
+                points.get(currentTargetIndex).getLng()
+        );
+
+        if (calculateDistance(newLocation, currentTarget) <= TARGET_REACHED_DISTANCE) {
+            showToast("Точка достигнута!");
+            currentTargetIndex++;
+
+            if (currentTargetIndex < points.size()) {
+                buildRouteToCurrentTarget();
+            } else {
+                showToast("Маршрут завершен!");
+            }
+        }
+    }
+
+    private void updateRouteIfNeeded(Point newLocation) {
         if (lastRoutePoint == null ||
                 calculateDistance(lastRoutePoint, newLocation) > MIN_DISTANCE_UPDATE) {
-            showToast("Перестраиваем маршрут");
-
             if (currentTargetIndex < points.size()) {
                 buildRouteToCurrentTarget();
             }
@@ -237,120 +181,181 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
         }
     }
 
-    private double calculateDistance(Point a, Point b) {
-        double latDiff = a.getLatitude() - b.getLatitude();
-        double lonDiff = a.getLongitude() - b.getLongitude();
-        return Math.sqrt(latDiff * latDiff + lonDiff * lonDiff) * 111000; // Метры
-    }
+    private void setupMap() {
+        mapObjects = mapView.getMap().getMapObjects().addCollection();
 
-
-    private void buildRouteToCurrentTarget() {
-        if (currentTargetIndex >= points.size()) return;
-
-        addAllMarkers(); // Обновляем маркеры
-        Point destination = new Point(
-                points.get(currentTargetIndex).getLat(),
-                points.get(currentTargetIndex).getLng()
+        // Начальная позиция камеры
+        mapView.getMap().move(new CameraPosition(
+                        new Point(57.767689, 40.926422), 14, 0, 0),
+                new Animation(Animation.Type.SMOOTH, 1), null
         );
-        buildPedestrianRoute(destination);
+
+        pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter();
+        setupUserLocationLayer();
+        loadPointsFromJson();
     }
 
+    private void setupUserLocationLayer() {
+        MapKit mapKit = MapKitFactory.getInstance();
+        userLocationLayer = mapKit.createUserLocationLayer(mapView.getMapWindow());
+        userLocationLayer.setVisible(true);
+        userLocationLayer.setHeadingEnabled(false);
+    }
 
-    private void addMarkers() {
+    private void loadPointsFromJson() {
         try {
-            InputStreamReader reader = new InputStreamReader(getAssets().open("points.json"));
-            PointsData data = new Gson().fromJson(reader, PointsData.class);
+            PointsData data = new Gson().fromJson(
+                    new InputStreamReader(getAssets().open("points.json")),
+                    PointsData.class
+            );
             points = data.getPoints();
-
-            if (!points.isEmpty()) {
-                // Добавляем маркер для первой точки
-                addAllMarkers();
-
-                // Строим маршрут, когда будет известно местоположение пользователя
-                if (userLocation != null && userLocation.getLatitude() != 0 && userLocation.getLongitude() != 0) {
-                    buildRouteToCurrentTarget();
-                }
-            }
+            addAllMarkers();
         } catch (Exception e) {
-            e.printStackTrace();
             showToast("Ошибка загрузки точек");
+            e.printStackTrace();
         }
     }
 
-
     private void addAllMarkers() {
         mapObjects.clear();
+        markers.clear();
+
         for (int i = 0; i < points.size(); i++) {
             PointData point = points.get(i);
             Point yandexPoint = new Point(point.getLat(), point.getLng());
 
             PlacemarkMapObject marker = mapObjects.addPlacemark(yandexPoint);
-
-            // Разные иконки в зависимости от состояния точки
-            if (i < currentTargetIndex) {
-                marker.setIcon(ImageProvider.fromResource(this, R.drawable.ic_tests_light)); // Пройдена
-            } else if (i == currentTargetIndex) {
-                marker.setIcon(ImageProvider.fromResource(this, R.drawable.ic_history_light)); // Текущая цель
-            } else {
-                marker.setIcon(ImageProvider.fromResource(this, R.drawable.ic_map_light)); // Предстоящая
-            }
-
+            marker.setIcon(getMarkerIcon(i));
             marker.setUserData(point.getTitle());
+
+            markers.put(i, marker);
         }
     }
 
+    private ImageProvider getMarkerIcon(int index) {
+        if (index < currentTargetIndex) {
+            return ImageProvider.fromResource(this, R.drawable.ic_tests_light);
+        } else if (index == currentTargetIndex) {
+            return ImageProvider.fromResource(this, R.drawable.ic_history_light);
+        } else {
+            return ImageProvider.fromResource(this, R.drawable.ic_map_light);
+        }
+    }
+
+    private void buildRouteToCurrentTarget() {
+        if (currentTargetIndex >= points.size()) return;
+
+        Point destination = new Point(
+                points.get(currentTargetIndex).getLat(),
+                points.get(currentTargetIndex).getLng()
+        );
+
+        buildPedestrianRoute(destination);
+    }
 
     private void buildPedestrianRoute(Point destination) {
-        //mapObjects.clear();
-        Point start = userLocation; // Используем текущее местоположение пользователя
+        if (userLocation == null) return;
 
-        // Создаем точки маршрута
         RequestPoint startPoint = new RequestPoint(
-                start,
-                RequestPointType.WAYPOINT,
-                null, null, null
-        );
-
+                userLocation, RequestPointType.WAYPOINT, null, null,null);
         RequestPoint endPoint = new RequestPoint(
-                destination,
-                RequestPointType.WAYPOINT,
-                null, null, null
-        );
+                destination, RequestPointType.WAYPOINT, null, null, null);
 
-        // Удаляем TransitOptions (не нужны для пешехода)
         pedestrianRouter.requestRoutes(
                 Arrays.asList(startPoint, endPoint),
                 new TimeOptions(null, null),
-                new RouteOptions(new FitnessOptions(false, false)), // 1. Если true, маршрутизатор будет стараться избегать крутых (по высоте) маршрутов. 2. Если да, маршрутизатор попытается избегать лестниц
+                new RouteOptions(new FitnessOptions(false, false)),
                 new Session.RouteListener() {
                     @Override
                     public void onMasstransitRoutes(@NonNull List<Route> routes) {
-                        if (!routes.isEmpty() && !routes.get(0).getGeometry().getPoints().isEmpty()) {
-                            // Отображение маршрута
-                            PolylineMapObject routeLine = mapObjects.addPolyline(routes.get(0).getGeometry());
-                            routeLine.setStrokeColor(ContextCompat.getColor(
-                                    MainActivity.this,
-                                    R.color.incorrect // Используем подходящий цвет
-                            ));
-                            routeLine.setStrokeWidth(3);
-
-                            // Добавляем маркер точки назначения
-                            PlacemarkMapObject marker = mapObjects.addPlacemark(destination);
-                            marker.setIcon(ImageProvider.fromResource(getApplicationContext(), R.drawable.ic_history_light, true));
+                        if (!routes.isEmpty()) {
+                            showRouteOnMap(routes.get(0));
                         }
                     }
 
                     @Override
                     public void onMasstransitRoutesError(@NonNull Error error) {
-                        //showToast("Ошибка построения маршрута: " + error.getMessage());
+                        showToast("Ошибка построения маршрута");
                     }
                 }
         );
     }
 
+    private void showRouteOnMap(Route route) {
+        mapObjects.clear();
+        addAllMarkers(); // Восстанавливаем маркеры
 
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        PolylineMapObject routeLine = mapObjects.addPolyline(route.getGeometry());
+        routeLine.setStrokeColor(ContextCompat.getColor(this, R.color.incorrect));
+        routeLine.setStrokeWidth(3);
+    }
+
+    private double calculateDistance(Point a, Point b) {
+        return Math.sqrt(
+                Math.pow(a.getLatitude() - b.getLatitude(), 2) +
+                        Math.pow(a.getLongitude() - b.getLongitude(), 2)
+        ) * 111000; // Метры
+    }
+
+    private void startLocationUpdates() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(500);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback,
+                    Looper.getMainLooper()
+            );
+        }
+    }
+
+    private void requestLocationPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE
+            );
+        } else {
+            startLocationUpdates();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startLocationUpdates();
+            }
+        }
+    }
+
+    // Остальные методы (onStart, onStop, onResume, setupBottomNavigation и т.д.)
+    // остаются такими же как в вашем исходном коде, но с учетом новых полей
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startLocationUpdates();
+        if (themeChanged) {
+            updateTheme();
+            themeChanged = false;
+        }
+        btNav.setSelectedItemId(R.id.nav_map);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        fusedLocationClient.removeLocationUpdates(locationCallback);
     }
 
     @Override
@@ -367,34 +372,51 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
         super.onStop();
     }
 
-    @Override
-    protected void onResume() {
-        if (themeChanged) {
-            updateTheme();
-            themeChanged = false;
-        }
-        btNav.setSelectedItemId(R.id.nav_map);
-        super.onResume();
+    private void setupBottomNavigation() {
+        btNav.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_map) return true;
+            if (id == R.id.nav_history) startActivity(new Intent(this, History.class));
+            if (id == R.id.nav_tests) startActivity(new Intent(this, Tests.class));
+            if (id == R.id.nav_settings) startActivity(new Intent(this, Settings.class));
+
+            return true;
+        });
     }
 
+    private void setupBackPressHandler() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
+    }
+
+    private void setupMenuButton() {
+        findViewById(R.id.map_menu).setOnClickListener(v ->
+                new BottomMenu().show(getSupportFragmentManager(), "bottomMenu")
+        );
+    }
+
+    private void setOurTheme() {
+        String theme = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("app_theme", "light");
+
+        setTheme(theme.equals("dark") ? R.style.Theme_App_Dark : R.style.Theme_App_Light);
+    }
 
     private void updateTheme() {
-        setOurTheme(); // Переустанавливаем тему
-
-        // Обновляем BottomNavigationView
+        setOurTheme();
         updateBottomNavigationColors();
-
-        // Обновляем другие элементы при необходимости
     }
 
     private void updateBottomNavigationColors() {
-        overridePendingTransition(0, 0);
-        // Получаем цвета из текущей темы
         int activeColor = getColorFromAttr(R.attr.menuItemColorActive);
         int inactiveColor = getColorFromAttr(R.attr.menuItemColor);
         int backgroundColor = getColorFromAttr(R.attr.menuColor);
 
-        // Создаем ColorStateList для иконок и текста
         ColorStateList colorStateList = new ColorStateList(
                 new int[][]{
                         new int[]{android.R.attr.state_checked},
@@ -403,11 +425,9 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
                 new int[]{activeColor, inactiveColor}
         );
 
-        // Применяем новые цвета
         btNav.setItemIconTintList(colorStateList);
         btNav.setItemTextColor(colorStateList);
         btNav.setBackgroundColor(backgroundColor);
-        btNav.setItemRippleColor(ColorStateList.valueOf(activeColor));
     }
 
     private int getColorFromAttr(int attrResId) {
@@ -416,49 +436,7 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
         return typedValue.data;
     }
 
-
-    private void requestPermissionsIfNecessary(String[] permissions) {
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                        this,
-                        permissions,
-                        REQUEST_PERMISSIONS_REQUEST_CODE);
-                break;
-            }
-        }
-    }
-
-    private void setOurTheme() {
-        String theme = android.preference.PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("app_theme", "light");
-
-        if (theme.equals("dark")) {
-            setTheme(R.style.Theme_App_Dark);
-        } else {
-            setTheme(R.style.Theme_App_Light);
-        }
-    }
-
-
-    private void setupBottomNavigation() {
-        btNav.setOnNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.nav_map) {
-                return true;
-            } else if (id == R.id.nav_history) {
-                startActivity(new Intent(this, History.class));
-                return true;
-            } else if (id == R.id.nav_tests) {
-                startActivity(new Intent(this, Tests.class));
-                return true;
-            } else if (id == R.id.nav_settings) {
-                startActivity(new Intent(this, Settings.class));
-                return true;
-            }
-            return false;
-        });
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
