@@ -1,6 +1,6 @@
 package com.example.intensiv;
 
-class PointData {
+public class PointArrayItem {
     private int id;
     private String title;
     private double lat;

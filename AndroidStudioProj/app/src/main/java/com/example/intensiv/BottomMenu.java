@@ -22,7 +22,7 @@ import java.util.List;
 
 public class BottomMenu extends BottomSheetDialogFragment {
     private Context activityContext;
-    private PointsData data;
+    private RootData data;
 
 
     public BottomMenu() {
@@ -38,10 +38,11 @@ public class BottomMenu extends BottomSheetDialogFragment {
 
         try {
             loadPointsData();
-            List<PointData> points = data.getPoints();
+            List<PointsData> points_a = data.getPoints();
+            List<PointArrayItem> points = points_a.get(0).getPointsarray();
 
             // Создаем карточки для каждой локации
-            for (PointData point : points) {
+            for (PointArrayItem point : points) {
                 View locationCard = inflater.inflate(R.layout.item_location_card, locationsContainer, false);
 
                 TextView title = locationCard.findViewById(R.id.location_title);
@@ -82,7 +83,7 @@ public class BottomMenu extends BottomSheetDialogFragment {
         try {
             FileInputStream fis = activityContext.openFileInput("points1.json");
             InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-            data = new Gson().fromJson(isr, PointsData.class);
+            data = new Gson().fromJson(isr, RootData.class);
             isr.close();
         } catch (FileNotFoundException e) {
             try {
@@ -92,7 +93,7 @@ public class BottomMenu extends BottomSheetDialogFragment {
                 is.read(buffer);
                 is.close();
                 String json = new String(buffer, StandardCharsets.UTF_8);
-                data = new Gson().fromJson(json, PointsData.class);
+                data = new Gson().fromJson(json, RootData.class);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }

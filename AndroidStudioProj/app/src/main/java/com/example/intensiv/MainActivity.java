@@ -1,19 +1,16 @@
 package com.example.intensiv;
 
 import android.Manifest;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.PointF;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -36,9 +33,6 @@ import com.yandex.mapkit.MapKit;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.RequestPoint;
 import com.yandex.mapkit.RequestPointType;
-import com.yandex.mapkit.directions.driving.DrivingRoute;
-import com.yandex.mapkit.directions.driving.DrivingSession;
-import com.yandex.mapkit.directions.driving.VehicleOptions;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.map.MapObjectCollection;
@@ -53,7 +47,6 @@ import com.yandex.mapkit.transport.masstransit.RouteOptions;
 import com.yandex.mapkit.transport.masstransit.Session;
 import com.yandex.mapkit.transport.masstransit.TimeOptions;
 import com.yandex.mapkit.user_location.UserLocationLayer;
-import com.yandex.mapkit.user_location.UserLocationView;
 import com.yandex.runtime.Error;
 import com.yandex.runtime.image.ImageProvider;
 
@@ -65,9 +58,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
@@ -78,18 +69,16 @@ public class MainActivity extends AppCompatActivity {
     private Point userLocation;
     private PedestrianRouter pedestrianRouter;
     public static boolean themeChanged = false;
-    private List<PointData> points;
+    private List<PointArrayItem> points;
     private MapObjectCollection mapObjects;
     private MapView mapView;
     private BottomNavigationView btNav;
     private Point lastRoutePoint;
     private int currentTargetIndex = 0;
-    PointsData data;
+    RootData data;
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
-
-    private boolean initial;
 
 
     @Override
@@ -183,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
             //Записываем в json файл
             points.get(currentTargetIndex).setComplete(true);
-            data.setPoints(points);
+            data.getPoints().get(0).setPointsarray(points);
             savePointsToJson();
 
             currentTargetIndex++;
@@ -253,10 +242,14 @@ public class MainActivity extends AppCompatActivity {
         pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter();
         setupUserLocationLayer();
         loadPointsData();
-        points = data.getPoints();
-        for (PointData point : points) {
+        List<PointsData> points_a = data.getPoints();
+        points = points_a.get(0).getPointsarray();
+        for (PointArrayItem point : points) {
             if (point.getComplete()) {
                 currentTargetIndex++;
+            }
+            else{
+                break;
             }
         }
         if (!points.isEmpty()) {
@@ -275,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
     private void addAllMarkers() {
 
         mapObjects.clear();
-        PointData point = points.get(currentTargetIndex);
+        PointArrayItem point = points.get(currentTargetIndex);
         Point yandexPoint = new Point(point.getLat(), point.getLng());
 
         PlacemarkMapObject marker = mapObjects.addPlacemark(yandexPoint);
@@ -513,7 +506,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             FileInputStream fis = openFileInput("points1.json");
             InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-            data = new Gson().fromJson(isr, PointsData.class);
+            data = new Gson().fromJson(isr, RootData.class);
             isr.close();
         } catch (FileNotFoundException e) {
             try {
@@ -523,7 +516,7 @@ public class MainActivity extends AppCompatActivity {
                 is.read(buffer);
                 is.close();
                 String json = new String(buffer, StandardCharsets.UTF_8);
-                data = new Gson().fromJson(json, PointsData.class);
+                data = new Gson().fromJson(json, RootData.class);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }

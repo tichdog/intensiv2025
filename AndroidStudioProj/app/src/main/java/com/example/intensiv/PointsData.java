@@ -2,14 +2,21 @@ package com.example.intensiv;
 
 import java.util.List;
 
-class PointsData {
-    private List<PointData> points;
+// PointsData.java - для основного объекта points
+public class PointsData {
+    private int id;
+    private String name;
+    private List<PointArrayItem> pointsarray;
 
-    public List<PointData> getPoints() {
-        return points;
-    }
+    // Геттеры и сеттеры
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setPoints(List<PointData> f) {
-        points = f;
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public List<PointArrayItem> getPointsarray() { return pointsarray; }
+    public void setPointsarray(List<PointArrayItem> pointsarray) {
+        this.pointsarray = pointsarray;
     }
 }

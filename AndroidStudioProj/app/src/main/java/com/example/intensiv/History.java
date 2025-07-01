@@ -3,13 +3,11 @@ package com.example.intensiv;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -47,11 +45,11 @@ public class History extends AppCompatActivity {
         try {
             // Загрузка данных из JSON
             InputStreamReader reader = new InputStreamReader(getAssets().open("points.json"));
-            PointsData data = new Gson().fromJson(reader, PointsData.class);
-            List<PointData> points = data.getPoints();
-
+            RootData data = new Gson().fromJson(reader, RootData.class);
+            List<PointsData> points_a = data.getPoints();
+            List<PointArrayItem> points = points_a.get(0).getPointsarray();
             if (points != null) {
-                for (PointData point : points) {
+                for (PointArrayItem point : points) {
                     View storyCard = createStoryCard(point, container);
                     container.addView(storyCard);
                 }
@@ -71,7 +69,7 @@ public class History extends AppCompatActivity {
 
     }
 
-    private View createStoryCard(PointData point, ViewGroup parent) {
+    private View createStoryCard(PointArrayItem point, ViewGroup parent) {
         Context context = parent.getContext();
         View card = LayoutInflater.from(context).inflate(R.layout.item_story, parent, false);
 
