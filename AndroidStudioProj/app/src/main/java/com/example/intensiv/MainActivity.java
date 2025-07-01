@@ -7,6 +7,7 @@ import com.example.intensiv.PointsData; // Ваш класс-контейнер
 import com.google.gson.Gson;            // Для парсинга JSON
 
 import java.io.InputStreamReader;       // Для чтения файла
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;                  // Для работы со списком
 
@@ -24,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.health.connect.LocalTimeRangeFilter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -86,12 +88,19 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
     private UserLocationLayer userLocationLayer;
     private Point userLocation; // Текущее местоположение пользователя
     private PedestrianRouter pedestrianRouter; // Заменяем MasstransitRouter
+    private List<PointData> points;
 
     private MapObjectCollection mapObjects;
+
     private MapView mapView;
     private BottomNavigationView btNav;
 
     public static boolean themeChanged = false;
+    private Point lastRoutePoint;
+
+    private static final double MIN_DISTANCE_UPDATE = 10; // метров
+    private int currentTargetIndex = 0; // Индекс текущей целевой точки
+    private static final double TARGET_REACHED_DISTANCE = 15; // Расстояние срабатывания (метры)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,8 +179,21 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
     // Обработчик обновления местоположения
     @Override
     public void onObjectAdded(@NonNull UserLocationView userLocationView) {
-        this.userLocation = userLocationView.getPin().getGeometry();
-        buildRouteToFirstPoint();
+//        userLocationView.getPin().setIcon(
+//                ImageProvider.fromResource(this, R.drawable.ic_map_light)  // Иконка позиции!
+//        );
+//        userLocationView.getArrow().setIcon(
+//                ImageProvider.fromResource(this, R.drawable.ic_tests_light)   // Иконка направления (если используется компас)!
+//        );
+//
+//        // Настройка круга точности
+//        userLocationView.getAccuracyCircle().setFillColor(
+//                Color.argb(30, 0, 150, 0) // Полупрозрачный голубой
+//        );
+
+//        this.userLocation = userLocationView.getPin().getGeometry();
+//        buildRouteToFirstPoint();
+
     }
 
     @Override
@@ -180,28 +202,73 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
 
     @Override
     public void onObjectUpdated(@NonNull UserLocationView userLocationView, @NonNull ObjectEvent objectEvent) {
-        this.userLocation = userLocationView.getPin().getGeometry();
-        buildRouteToFirstPoint();
+        Point newLocation = userLocationView.getPin().getGeometry();
+        this.userLocation = newLocation;
+
+        // Проверяем достижение текущей цели
+        if (currentTargetIndex < points.size()) {
+            Point currentTarget = new Point(
+                    points.get(currentTargetIndex).getLat(),
+                    points.get(currentTargetIndex).getLng()
+            );
+
+            double distance = calculateDistance(newLocation, currentTarget);
+            if (distance <= TARGET_REACHED_DISTANCE) {
+                showToast("Точка достигнута!");
+                currentTargetIndex++; // Переключаем на следующую точку
+
+                if (currentTargetIndex < points.size()) {
+                    buildRouteToCurrentTarget();
+                } else {
+                    showToast("Маршрут завершен!");
+                }
+            }
+        }
+
+        // Перестраиваем маршрут при значительном перемещении
+        if (lastRoutePoint == null ||
+                calculateDistance(lastRoutePoint, newLocation) > MIN_DISTANCE_UPDATE) {
+            showToast("Перестраиваем маршрут");
+
+            if (currentTargetIndex < points.size()) {
+                buildRouteToCurrentTarget();
+            }
+            lastRoutePoint = newLocation;
+        }
     }
+
+    private double calculateDistance(Point a, Point b) {
+        double latDiff = a.getLatitude() - b.getLatitude();
+        double lonDiff = a.getLongitude() - b.getLongitude();
+        return Math.sqrt(latDiff * latDiff + lonDiff * lonDiff) * 111000; // Метры
+    }
+
+
+    private void buildRouteToCurrentTarget() {
+        if (currentTargetIndex >= points.size()) return;
+
+        addAllMarkers(); // Обновляем маркеры
+        Point destination = new Point(
+                points.get(currentTargetIndex).getLat(),
+                points.get(currentTargetIndex).getLng()
+        );
+        buildPedestrianRoute(destination);
+    }
+
 
     private void addMarkers() {
         try {
             InputStreamReader reader = new InputStreamReader(getAssets().open("points.json"));
             PointsData data = new Gson().fromJson(reader, PointsData.class);
-            List<PointData> points = data.getPoints();
+            points = data.getPoints();
 
             if (!points.isEmpty()) {
                 // Добавляем маркер для первой точки
-                PointData firstPoint = points.get(0);
-                Point yandexPoint = new Point(firstPoint.getLat(), firstPoint.getLng());
-
-                PlacemarkMapObject marker = mapObjects.addPlacemark(yandexPoint);
-                //marker.setIcon(ImageProvider.fromResource(R.drawable.ic_target));
-                marker.setUserData(firstPoint.getTitle());
+                addAllMarkers();
 
                 // Строим маршрут, когда будет известно местоположение пользователя
                 if (userLocation != null && userLocation.getLatitude() != 0 && userLocation.getLongitude() != 0) {
-                    buildPedestrianRoute(yandexPoint);
+                    buildRouteToCurrentTarget();
                 }
             }
         } catch (Exception e) {
@@ -211,24 +278,30 @@ public class MainActivity extends AppCompatActivity implements UserLocationObjec
     }
 
 
-    private void buildRouteToFirstPoint() {
-        try {
-            InputStreamReader reader = new InputStreamReader(getAssets().open("points.json"));
-            PointsData data = new Gson().fromJson(reader, PointsData.class);
-            List<PointData> points = data.getPoints();
+    private void addAllMarkers() {
+        mapObjects.clear();
+        for (int i = 0; i < points.size(); i++) {
+            PointData point = points.get(i);
+            Point yandexPoint = new Point(point.getLat(), point.getLng());
 
-            if (!points.isEmpty() && userLocation != null && userLocation.getLatitude() != 0 && userLocation.getLongitude() != 0) {
-                Point destination = new Point(points.get(0).getLat(), points.get(0).getLng());
-                buildPedestrianRoute(destination);
+            PlacemarkMapObject marker = mapObjects.addPlacemark(yandexPoint);
+
+            // Разные иконки в зависимости от состояния точки
+            if (i < currentTargetIndex) {
+                marker.setIcon(ImageProvider.fromResource(this, R.drawable.ic_tests_light)); // Пройдена
+            } else if (i == currentTargetIndex) {
+                marker.setIcon(ImageProvider.fromResource(this, R.drawable.ic_history_light)); // Текущая цель
+            } else {
+                marker.setIcon(ImageProvider.fromResource(this, R.drawable.ic_map_light)); // Предстоящая
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            marker.setUserData(point.getTitle());
         }
     }
 
 
     private void buildPedestrianRoute(Point destination) {
-        mapObjects.clear();
+        //mapObjects.clear();
         Point start = userLocation; // Используем текущее местоположение пользователя
 
         // Создаем точки маршрута
