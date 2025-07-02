@@ -53,8 +53,6 @@ public class HistoryDescription extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(imageName);
             imageView.setImageBitmap(bitmap);
             imageView.setVisibility(View.VISIBLE);
-        } else {
-            imageView.setVisibility(View.GONE);
         }
         if (imageName != null && currentM == 1) {
             int resId = getResources().getIdentifier(

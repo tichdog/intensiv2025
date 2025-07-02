@@ -15,4 +15,5 @@
     <attr name="menuItemColor" format="reference|color"/>
     <attr name="menuItemColorActive" format="reference|color"/>
     <attr name="backHistAct" format="reference|color"/>
+    <attr name="zast_back" format="reference"/>
 </resources>

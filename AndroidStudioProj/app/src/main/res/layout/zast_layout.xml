@@ -5,7 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/customBackground">
+    android:background="@drawable/zast_light_back">
 
     <!-- Горизонтальные направляющие -->
     <androidx.constraintlayout.widget.Guideline

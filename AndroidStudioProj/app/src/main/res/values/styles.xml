@@ -48,6 +48,7 @@
         <item name="menuItemColor">#1A212B</item>
         <item name="menuItemColorActive">#A0F4EF</item>
         <item name="backHistAct">#8585FF</item>
+        <item name="zast_back">@drawable/zast_light_back</item>
     </style>
 
     <!-- Тёмная тема -->
@@ -72,6 +73,7 @@
         <item name="menuItemColor">#FFFFFFCC</item>
         <item name="menuItemColorActive">#A8A8F5</item>
         <item name="backHistAct">#6464A9</item>
+        <item name="zast_back">@drawable/zast</item>
     </style>
 
     <style name="ToolbarTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
