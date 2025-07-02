@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 
-
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -56,6 +56,13 @@ public class Tests extends AppCompatActivity {
             View storyCard = createTestCard(container, test); // 50% прогресс
             container.addView(storyCard);
         }
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+                overridePendingTransition(0, 0);
+            }
+        });
     }
 
     // Создание одной карточки истории

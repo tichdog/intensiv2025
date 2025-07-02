@@ -46,7 +46,7 @@ public class ShowAllHistories extends AppCompatActivity {
         setSupportActionBar(toolbar);
         btNav = findViewById(R.id.bottom_nav_1);
         setupBottomNavigation();
-        btNav.setSelectedItemId(R.id.nav_history);
+        btNav.setSelectedItemId(R.id.nav_settings);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -73,10 +73,11 @@ public class ShowAllHistories extends AppCompatActivity {
             public void handleOnBackPressed() {
                 finish();
                 overridePendingTransition(0, 0);
+                startActivity(new Intent(ShowAllHistories.this, SettingsO.class));
+
 
             }
         });
-
     }
 
     private void clearAllCard() {
@@ -140,6 +141,9 @@ public class ShowAllHistories extends AppCompatActivity {
                 overridePendingTransition(0, 0);
                 return true;
             } else if (id == R.id.nav_history) {
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(new Intent(this, History.class));
                 return true;
             } else if (id == R.id.nav_tests) {
                 finish();
@@ -147,9 +151,6 @@ public class ShowAllHistories extends AppCompatActivity {
                 startActivity(new Intent(this, Tests.class));
                 return true;
             } else if (id == R.id.nav_settings) {
-                finish();
-                overridePendingTransition(0, 0);
-                startActivity(new Intent(this, SettingsO.class));
                 return true;
             }
             return false;
@@ -171,6 +172,7 @@ public class ShowAllHistories extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         overridePendingTransition(0, 0);
+        startActivity(new Intent(ShowAllHistories.this, SettingsO.class));
         return true;
     }
 

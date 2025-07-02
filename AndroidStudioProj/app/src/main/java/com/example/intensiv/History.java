@@ -2,6 +2,9 @@ package com.example.intensiv;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +21,19 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class History extends AppCompatActivity {
 
     private BottomNavigationView btNav;
+    private RootData data;
+    private int currentMarshrut = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +54,11 @@ public class History extends AppCompatActivity {
         ViewGroup container = findViewById(R.id.storiesContainer);
 
         try {
-            InputStreamReader reader = new InputStreamReader(getAssets().open("points.json"));
-            RootData data = new Gson().fromJson(reader, RootData.class);
+            loadPointsData();
+            SharedPreferences sharedPreferences = getSharedPreferences("Vibor_History", Context.MODE_PRIVATE);
+            currentMarshrut = sharedPreferences.getInt("ID", 1);
             List<PointsData> points_a = data.getPoints();
-            List<PointArrayItem> points = points_a.get(0).getPointsarray();
+            List<PointArrayItem> points = points_a.get(currentMarshrut - 1).getPointsarray();
             if (points != null) {
                 for (PointArrayItem point : points) {
                     View storyCard = createStoryCard(point, container);
@@ -79,13 +90,21 @@ public class History extends AppCompatActivity {
         textView.setText(point.getTitle());
         opisanie.setText(point.getShort());
 
-        int resId = context.getResources().getIdentifier(
-                point.getShow(),
-                "drawable",
-                context.getPackageName()
-        );
-        if (resId != 0) {
-            img.setImageResource(resId);
+        if (point.getShow() != null && currentMarshrut != 1) {
+            Bitmap bitmap = BitmapFactory.decodeFile(point.getShow());
+            img.setImageBitmap(bitmap);
+            img.setVisibility(View.VISIBLE);
+        }
+
+        if (point.getShow() != null && currentMarshrut == 1) {
+            int resId = context.getResources().getIdentifier(
+                    point.getShow(),
+                    "drawable",
+                    context.getPackageName()
+            );
+            if (resId != 0) {
+                img.setImageResource(resId);
+            }
         }
 
         // Общий обработчик клика для всей карточки и изображения
@@ -94,6 +113,7 @@ public class History extends AppCompatActivity {
             intent.putExtra("title", point.getTitle());
             intent.putExtra("description", point.getDescription());
             intent.putExtra("image", point.getShow());
+            intent.putExtra("currentM", point.getId());
             startActivity(intent);
             overridePendingTransition(0, 0);
             finish();
@@ -147,5 +167,28 @@ public class History extends AppCompatActivity {
         finish();
         overridePendingTransition(0, 0);
         return true;
+    }
+
+    private void loadPointsData() {
+        try {
+            FileInputStream fis = openFileInput("points1.json");
+            InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+            data = new Gson().fromJson(isr, RootData.class);
+            isr.close();
+        } catch (FileNotFoundException e) {
+            try {
+                InputStream is = getAssets().open("points1.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                String json = new String(buffer, StandardCharsets.UTF_8);
+                data = new Gson().fromJson(json, RootData.class);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

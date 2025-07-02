@@ -1,7 +1,10 @@
 package com.example.intensiv;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +38,7 @@ public class HistoryDescription extends AppCompatActivity {
         String title = getIntent().getStringExtra("title");
         String description = getIntent().getStringExtra("description");
         String imageName = getIntent().getStringExtra("image");
+        int currentM = getIntent().getIntExtra("currentM", 1);
 
 
         // Установка данных
@@ -45,7 +49,14 @@ public class HistoryDescription extends AppCompatActivity {
         titleView.setText(title);
         descriptionView.setText(description);
 
-        if (imageName != null) {
+        if (imageName != null && currentM != 1) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imageName);
+            imageView.setImageBitmap(bitmap);
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.GONE);
+        }
+        if (imageName != null && currentM == 1) {
             int resId = getResources().getIdentifier(
                     imageName,
                     "drawable",

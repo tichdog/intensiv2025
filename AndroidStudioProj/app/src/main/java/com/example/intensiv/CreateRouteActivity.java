@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -125,6 +126,16 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
 
         // Обработчики событий
         saveRouteButton.setOnClickListener(v -> saveRoutes());
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(new Intent(CreateRouteActivity.this, SettingsO.class));
+
+
+            }
+        });
     }
 
     private void createNewRoute() {
