@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,7 +53,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     private MapView mapView;
     private RootData routesRoot;
     private PointsData currentRoute;
-    private int currentPointId = 0;
+    private int currentPointId = 1;
     private int currentRouteId = 1;
 
 
@@ -63,6 +64,8 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     private long lastTapTime = 0;
 
     private PointsAdapter pointsAdapter;
+    private AlertDialog currentPointDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +140,6 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
             lastTapTime = System.currentTimeMillis();
             // Ваш код добавления точки
 
-            currentPointId++;
             PointArrayItem newPoint = new PointArrayItem(
                     currentPointId,
                     "Точка " + currentPointId,
@@ -154,15 +156,16 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     }
 
     private void showPointDialog(PointArrayItem point) {
+        currentEditingPoint = point;
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_point_edit, null);
 
         EditText titleEditText = dialogView.findViewById(R.id.titleEditText);
         EditText shrtEditText = dialogView.findViewById(R.id.shrtEditText);
         EditText descriptionEditText = dialogView.findViewById(R.id.descriptionEditText);
 
-        titleEditText.setText(point.getTitle());
-        shrtEditText.setText(point.getShort());
-        descriptionEditText.setText(point.getDescription());
+        titleEditText.setText(currentEditingPoint.getTitle());
+        shrtEditText.setText(currentEditingPoint.getShort());
+        descriptionEditText.setText(currentEditingPoint.getDescription());
 
 
         // существующие поля
@@ -170,8 +173,8 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         ImageView photoPreview = dialogView.findViewById(R.id.photoPreview);
 
         // если есть изображение, показываем его
-        if (point.getImagePath() != null && !point.getImagePath().isEmpty()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(point.getImagePath());
+        if (currentEditingPoint.getShow() != null && !currentEditingPoint.getShow().isEmpty()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(currentEditingPoint.getShow());
             photoPreview.setImageBitmap(bitmap);
         }
 
@@ -179,23 +182,39 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
             // Запускаем Intent для выбора изображения
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
+            // Записываем в текущую точку информацию для правильного пересоздания диалога
+            currentEditingPoint.setTitle(titleEditText.getText().toString());
+            currentEditingPoint.setShrt(shrtEditText.getText().toString());
+            currentEditingPoint.setDescription(descriptionEditText.getText().toString());
             startActivityForResult(Intent.createChooser(intent, "Select Picture"),
-                    REQUEST_IMAGE_PICK + point.getId());
+                    REQUEST_IMAGE_PICK + currentEditingPoint.getId());
         });
 
+        if (currentPointDialog != null && currentPointDialog.isShowing()) {
+            currentPointDialog.dismiss();
+        }
 
-
-        new MaterialAlertDialogBuilder(this)
+        currentPointDialog = new MaterialAlertDialogBuilder(this)
                 .setTitle("Редактирование точки")
                 .setView(dialogView)
                 .setPositiveButton("Сохранить", (dialog, which) -> {
-                    point.setTitle(titleEditText.getText().toString());
-                    point.setShrt(shrtEditText.getText().toString());
-                    point.setDescription(descriptionEditText.getText().toString());
+                    currentEditingPoint.setTitle(titleEditText.getText().toString());
+                    currentEditingPoint.setShrt(shrtEditText.getText().toString());
+                    currentEditingPoint.setDescription(descriptionEditText.getText().toString());
 
-                    currentRoute.addPoint(point);
+                    boolean f1 = false;
+                    for (PointArrayItem pointer : currentRoute.getPointsarray()) {
+                        if (pointer.getId() == currentEditingPoint.getId()) {
+                            f1 = true;
+                        }
+                    }
+                    if (!f1) {
+                        currentRoute.addPoint(currentEditingPoint);
+                        addPointMarker(currentEditingPoint);
+                    }
+                    currentPointId++;
                     pointsAdapter.notifyDataSetChanged();
-                    addPointMarker(point);
+
                 })
                 .setNegativeButton("Отмена", null)
                 .show();
@@ -325,7 +344,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
                         new Animation(Animation.Type.SMOOTH, 0.3f),
                         null
                 );
-                //showPointDialog(point);
+                showPointDialog(point);
             });
         }
 
@@ -345,6 +364,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
             }
         }
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         finish();
@@ -354,6 +374,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     }
 
     private static final int REQUEST_IMAGE_PICK = 1000;
+
     private PointArrayItem currentEditingPoint;
 
     @Override
@@ -363,28 +384,49 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
 
-            // Получаем ID точки из requestCode
-            int pointId = requestCode - REQUEST_IMAGE_PICK;
+            // Проверяем, что у нас есть текущая редактируемая точка
+            if (currentEditingPoint != null) {
+                try {
+                    // Сохраняем изображение и обновляем точку
+                    String imagePath = saveImageToInternalStorage(imageUri, "point_" + currentEditingPoint.getId());
+                    currentEditingPoint.setShow(imagePath);
 
-            // Находим точку в текущем маршруте
-            for (PointArrayItem point : currentRoute.getPointsarray()) {
-                if (point.getId() == pointId) {
-                    try {
-                        // Сохраняем изображение во внутреннее хранилище
-                        String imagePath = saveImageToInternalStorage(imageUri, "point_" + pointId);
-                        point.setImagePath(imagePath);
 
-                        // Обновляем адаптер
-                        pointsAdapter.notifyDataSetChanged();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(this, "Ошибка загрузки изображения", Toast.LENGTH_SHORT).show();
+                    if (currentPointDialog != null && currentPointDialog.isShowing()) {
+                        currentPointDialog.dismiss();
                     }
-                    break;
+                    // Обновляем адаптер
+                    pointsAdapter.notifyDataSetChanged();
+                    // Закрываем диалог и открываем заново с обновленным изображением
+                    recreatePointDialog();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Ошибка загрузки изображения", Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
+
+
+    private void recreatePointDialog() {
+        // Закрываем текущий диалог
+        if (currentEditingPoint != null) {
+            // Создаем копию точки, так как оригинал уже изменен
+            PointArrayItem pointCopy = new PointArrayItem(
+                    currentEditingPoint.getId(),
+                    currentEditingPoint.getTitle(),
+                    currentEditingPoint.getLat(),
+                    currentEditingPoint.getLng()
+            );
+            pointCopy.setShow(currentEditingPoint.getShow());
+            pointCopy.setShrt(currentEditingPoint.getShort());
+            pointCopy.setDescription(currentEditingPoint.getDescription());
+
+            // Показываем диалог снова
+            showPointDialog(pointCopy);
+        }
+    }
+
 
     private String saveImageToInternalStorage(Uri imageUri, String fileName) throws IOException {
         InputStream inputStream = getContentResolver().openInputStream(imageUri);

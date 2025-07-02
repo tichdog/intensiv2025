@@ -383,9 +383,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getCurrentMarshrut() {
+    private boolean needChangeMarshrut() {
         SharedPreferences sharedPreferences = getSharedPreferences("Vibor_History", Context.MODE_PRIVATE);
-        currentMarshrut = sharedPreferences.getInt("ID", 1);
+        int prefer = sharedPreferences.getInt("ID", 1);
+        if (currentMarshrut != prefer) {
+            currentMarshrut = prefer;
+            return true;
+        }
+        return false;
     }
 
     // Остальные методы (onStart, onStop, onResume, setupBottomNavigation и т.д.)
@@ -411,20 +416,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        getCurrentMarshrut();
-        loadPointsData();
-        List<PointsData> points_a = data.getPoints();
-        currentTargetIndex = 0;
-        points = points_a.get(currentMarshrut - 1).getPointsarray();
-        for (PointArrayItem point : points) {
-            if (point.getComplete()) {
-                currentTargetIndex++;
-            } else {
-                break;
+        if (needChangeMarshrut()) {
+            loadPointsData();
+            List<PointsData> points_a = data.getPoints();
+            currentTargetIndex = 0;
+            points = points_a.get(currentMarshrut - 1).getPointsarray();
+            for (PointArrayItem point : points) {
+                if (point.getComplete()) {
+                    currentTargetIndex++;
+                } else {
+                    break;
+                }
             }
-        }
-        if (!points.isEmpty()) {
-            addAllMarkers();
+            if (!points.isEmpty()) {
+                addAllMarkers();
+            }
         }
         super.onStart();
         MapKitFactory.getInstance().onStart();

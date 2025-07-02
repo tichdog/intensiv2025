@@ -4,8 +4,6 @@ public class PointArrayItem {
     private int id;
     private String title;
     private double lat;
-    private String imagePath; // путь к изображению
-
     private double lng;
     private String description;
     private String shrt;
@@ -62,14 +60,5 @@ public class PointArrayItem {
     public void setShow(String show) { this.show = show; }
     public void setShrt(String shrt) { this.shrt = shrt; }
     public void setDescription(String description) { this.description = description; }
-
-    // добавьте геттер и сеттер
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
 
 }
