@@ -1,6 +1,7 @@
 package com.example.intensiv;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public class BottomMenu extends BottomSheetDialogFragment {
     private Context activityContext;
     private RootData data;
 
+    private int currentRouteId = 1; // Добавляем поле для хранения ID текущего маршрута
 
     public BottomMenu() {
     }
@@ -33,34 +35,49 @@ public class BottomMenu extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.down_menu, container, false);
 
-        // Находим контейнер для карточек
         LinearLayout locationsContainer = view.findViewById(R.id.locations_container);
+        TextView chosenStoryText = view.findViewById(R.id.chosen_story);
 
         try {
             loadPointsData();
-            List<PointsData> points_a = data.getPoints();
-            List<PointArrayItem> points = points_a.get(0).getPointsarray();
 
-            // Создаем карточки для каждой локации
-            for (PointArrayItem point : points) {
-                View locationCard = inflater.inflate(R.layout.item_location_card, locationsContainer, false);
+            // Получаем ID текущего маршрута из SharedPreferences
+            SharedPreferences sharedPreferences = activityContext.getSharedPreferences("Vibor_History", Context.MODE_PRIVATE);
+            currentRouteId = sharedPreferences.getInt("ID", 1);
 
-                TextView title = locationCard.findViewById(R.id.location_title);
-                TextView coords = locationCard.findViewById(R.id.location_coords);
+            // Находим выбранный маршрут
+            PointsData selectedRoute = data.getPoints().stream()
+                    .filter(route -> route.getId() == currentRouteId)
+                    .findFirst()
+                    .orElse(null);
 
-                if(point.getComplete()) {
-                    locationCard.setBackgroundResource(R.drawable.back_history_active);
+            if (selectedRoute != null) {
+                // Устанавливаем название выбранного маршрута
+                chosenStoryText.setText(selectedRoute.getName());
+
+                // Загружаем точки для выбранного маршрута
+                List<PointArrayItem> points = selectedRoute.getPointsarray();
+                if (points != null) {
+                    for (PointArrayItem point : points) {
+                        View locationCard = inflater.inflate(R.layout.item_location_card, locationsContainer, false);
+
+                        TextView title = locationCard.findViewById(R.id.location_title);
+                        TextView coords = locationCard.findViewById(R.id.location_coords);
+
+                        if(point.getComplete()) {
+                            locationCard.setBackgroundResource(R.drawable.back_history_active);
+                        }
+                        title.setText(point.getTitle());
+                        coords.setText(String.format("Координаты: %.6f, %.6f", point.getLat(), point.getLng()));
+
+                        locationsContainer.addView(locationCard);
+                    }
                 }
-                title.setText(point.getTitle());
-                coords.setText(String.format("Координаты: %.6f, %.6f", point.getLat(), point.getLng()));
-
-                locationsContainer.addView(locationCard);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Обработчик кнопки закрытия
         Button btnClose = view.findViewById(R.id.btnClose);
         btnClose.setOnClickListener(v -> dismiss());
 

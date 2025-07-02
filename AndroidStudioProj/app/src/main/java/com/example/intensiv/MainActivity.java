@@ -416,6 +416,7 @@ public class MainActivity extends AppCompatActivity {
         List<PointsData> points_a = data.getPoints();
         currentTargetIndex = 0;
         points = points_a.get(currentMarshrut - 1).getPointsarray();
+        updateBottomMenu();
         for (PointArrayItem point : points) {
             if (point.getComplete()) {
                 currentTargetIndex++;
@@ -430,7 +431,12 @@ public class MainActivity extends AppCompatActivity {
         MapKitFactory.getInstance().onStart();
         mapView.onStart();
     }
-
+    private void updateBottomMenu() {
+        BottomMenu bottomMenu = (BottomMenu) getSupportFragmentManager().findFragmentByTag("bottomMenu");
+        if (bottomMenu != null) {
+            bottomMenu.dismiss();
+        }
+    }
     @Override
     protected void onStop() {
         mapView.onStop();
