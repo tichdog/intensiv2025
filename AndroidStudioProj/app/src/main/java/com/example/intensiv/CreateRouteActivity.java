@@ -66,6 +66,9 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_route);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -139,12 +142,12 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_point_edit, null);
 
         EditText titleEditText = dialogView.findViewById(R.id.titleEditText);
-        EditText showEditText = dialogView.findViewById(R.id.showEditText);
+        //EditText showEditText = dialogView.findViewById(R.id.showEditText);
         EditText shrtEditText = dialogView.findViewById(R.id.shrtEditText);
         EditText descriptionEditText = dialogView.findViewById(R.id.descriptionEditText);
 
         titleEditText.setText(point.getTitle());
-        showEditText.setText(point.getShow());
+        //showEditText.setText(point.getShow());
         shrtEditText.setText(point.getShort());
         descriptionEditText.setText(point.getDescription());
 
@@ -153,7 +156,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
                 .setView(dialogView)
                 .setPositiveButton("Сохранить", (dialog, which) -> {
                     point.setTitle(titleEditText.getText().toString());
-                    point.setShow(showEditText.getText().toString());
+                    //point.setShow(showEditText.getText().toString());
                     point.setShrt(shrtEditText.getText().toString());
                     point.setDescription(descriptionEditText.getText().toString());
 
@@ -307,5 +310,12 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
                 positionTextView = itemView.findViewById(R.id.pointPosition);
             }
         }
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(new Intent(this, SettingsO.class));
+        return true;
     }
 }
