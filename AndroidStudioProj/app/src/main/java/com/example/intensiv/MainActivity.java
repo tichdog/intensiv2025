@@ -7,8 +7,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.Settings;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.widget.ImageView;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -192,21 +195,26 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-                // Запрос разрешений
-                ActivityCompat.requestPermissions(
-                        this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_PERMISSIONS_REQUEST_CODE
-                );
-                return;
-            }
-
-            if (userLocation != null) {
-                moveCameraToUserLocation();
+                new AlertDialog.Builder(this)
+                        .setTitle("Требуется доступ к местоположению")
+                        .setMessage("Для работы этой функции необходимо разрешение. Хотите открыть настройки?")
+                        .setPositiveButton("Настройки", (d, w) -> openAppSettings())
+                        .setNegativeButton("Отмена", null)
+                        .show();
             } else {
-                Toast.makeText(this, "Местоположение неизвестно", Toast.LENGTH_SHORT).show();
+                if (userLocation != null) {
+                    moveCameraToUserLocation();
+                } else {
+                    Toast.makeText(this, "Местоположение неизвестно", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    private void openAppSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.fromParts("package", getPackageName(), null));
+        startActivity(intent);
     }
 
     private void moveCameraToUserLocation() {
@@ -249,8 +257,7 @@ public class MainActivity extends AppCompatActivity {
         for (PointArrayItem point : points) {
             if (point.getComplete()) {
                 currentTargetIndex++;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -416,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.nav_map) return true;
             if (id == R.id.nav_history) startActivity(new Intent(this, History.class));
             if (id == R.id.nav_tests) startActivity(new Intent(this, Tests.class));
-            if (id == R.id.nav_settings) startActivity(new Intent(this, Settings.class));
+            if (id == R.id.nav_settings) startActivity(new Intent(this, SettingsO.class));
 
             return true;
         });

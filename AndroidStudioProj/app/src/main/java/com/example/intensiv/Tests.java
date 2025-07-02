@@ -2,18 +2,13 @@ package com.example.intensiv;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -21,20 +16,15 @@ import com.google.gson.Gson;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.Preference;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 public class Tests extends AppCompatActivity {
 
@@ -159,7 +149,7 @@ public class Tests extends AppCompatActivity {
             } else if (id == R.id.nav_settings) {
                 finish();
                 overridePendingTransition(0, 0);
-                startActivity(new Intent(this, Settings.class));
+                startActivity(new Intent(this, SettingsO.class));
                 return true;
             }
             return false;

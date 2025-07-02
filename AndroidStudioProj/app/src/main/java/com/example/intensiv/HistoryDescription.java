@@ -94,7 +94,7 @@ public class HistoryDescription extends AppCompatActivity {
             } else if (id == R.id.nav_settings) {
                 finish();
                 overridePendingTransition(0, 0);
-                startActivity(new Intent(this, Settings.class));
+                startActivity(new Intent(this, SettingsO.class));
                 return true;
             }
             return false;

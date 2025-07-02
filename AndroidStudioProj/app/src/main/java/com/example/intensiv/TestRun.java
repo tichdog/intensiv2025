@@ -2,24 +2,16 @@ package com.example.intensiv;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.text.TextPaint;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -260,7 +252,7 @@ public class TestRun extends AppCompatActivity {
                 return true;
             } else if (id == R.id.nav_settings) {
                 finish();
-                startActivity(new Intent(this, Settings.class));
+                startActivity(new Intent(this, SettingsO.class));
                 return true;
             }
             return false;

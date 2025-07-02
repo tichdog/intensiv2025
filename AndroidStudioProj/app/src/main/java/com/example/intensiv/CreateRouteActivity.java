@@ -32,8 +32,12 @@ import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.mapview.MapView;
 import com.yandex.runtime.image.ImageProvider;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class CreateRouteActivity extends AppCompatActivity implements InputListener {
@@ -44,6 +48,8 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     private PointsData currentRoute;
     private int currentPointId = 1;
     private int currentRouteId = 1;
+    RootData data;
+
 
     private EditText routeIdEditText;
     private EditText routeNameEditText;
@@ -69,6 +75,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        loadPointsData();
 
         // Инициализация MapView
         mapView = findViewById(R.id.mapView);
@@ -221,6 +228,29 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
             }
             return false;
         });
+    }
+
+    private void loadPointsData() {
+        try {
+            FileInputStream fis = openFileInput("points1.json");
+            InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+            data = new Gson().fromJson(isr, RootData.class);
+            isr.close();
+        } catch (FileNotFoundException e) {
+            try {
+                InputStream is = getAssets().open("points1.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                String json = new String(buffer, StandardCharsets.UTF_8);
+                data = new Gson().fromJson(json, RootData.class);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
