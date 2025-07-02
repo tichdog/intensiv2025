@@ -2,11 +2,14 @@ package com.example.intensiv;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.io.File;
+
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +33,7 @@ public class ShowAllHistories extends AppCompatActivity {
 
     private BottomNavigationView btNav;
     RootData routesRoot;
+    LinearLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,7 @@ public class ShowAllHistories extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        LinearLayout container = findViewById(R.id.storiesContainer);
+        container = findViewById(R.id.storiesContainer);
 
         try {
             // Загрузка данных из JSON
@@ -75,15 +79,34 @@ public class ShowAllHistories extends AppCompatActivity {
 
     }
 
+    private void clearAllCard() {
+        for (int i = 0; i < container.getChildCount(); i++) {
+            View child = container.getChildAt(i);
+            child.setBackgroundResource(R.drawable.back_history);
+        }
+    }
+
     private View createStoryCard(PointsData point, ViewGroup parent) {
         Context context = parent.getContext();
         View card = LayoutInflater.from(context).inflate(R.layout.itme_all_histories, parent, false);
+        SharedPreferences sharedPreferences = getSharedPreferences("Vibor_History", Context.MODE_PRIVATE);
+        int id = sharedPreferences.getInt("ID", 1);
+        if(id == point.getId()){
+            card.setBackgroundResource(R.drawable.back_history_active);
+        }
 
         TextView textView = card.findViewById(R.id.title_text);
         TextView opisanie = card.findViewById(R.id.id_text);
 
         textView.setText(point.getName());
         opisanie.setText(String.valueOf(point.getId()));
+        card.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("ID", point.getId());
+            editor.apply();
+            clearAllCard();
+            card.setBackgroundResource(R.drawable.back_history_active);
+        });
         // Загрузка изображения
 //        int resId = context.getResources().getIdentifier(
 //                point.getShow(),
@@ -143,6 +166,7 @@ public class ShowAllHistories extends AppCompatActivity {
             setTheme(R.style.Theme_App_Light);
         }
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         finish();

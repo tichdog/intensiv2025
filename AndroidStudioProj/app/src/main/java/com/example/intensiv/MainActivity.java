@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private Point lastRoutePoint;
     private int currentTargetIndex = 0;
     RootData data;
+    int currentMarshrut = 1;
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
             //Записываем в json файл
             points.get(currentTargetIndex).setComplete(true);
-            data.getPoints().get(0).setPointsarray(points);
+            data.getPoints().get(currentMarshrut - 1).setPointsarray(points);
             savePointsToJson();
 
             currentTargetIndex++;
@@ -251,19 +252,19 @@ public class MainActivity extends AppCompatActivity {
 
         pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter();
         setupUserLocationLayer();
-        loadPointsData();
-        List<PointsData> points_a = data.getPoints();
-        points = points_a.get(0).getPointsarray();
-        for (PointArrayItem point : points) {
-            if (point.getComplete()) {
-                currentTargetIndex++;
-            } else {
-                break;
-            }
-        }
-        if (!points.isEmpty()) {
-            addAllMarkers();
-        }
+//        loadPointsData();
+//        List<PointsData> points_a = data.getPoints();
+//        points = points_a.get(currentMarshrut - 1).getPointsarray();
+//        for (PointArrayItem point : points) {
+//            if (point.getComplete()) {
+//                currentTargetIndex++;
+//            } else {
+//                break;
+//            }
+//        }
+//        if (!points.isEmpty()) {
+//            addAllMarkers();
+//        }
     }
 
     private void setupUserLocationLayer() {
@@ -382,6 +383,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void getCurrentMarshrut() {
+        SharedPreferences sharedPreferences = getSharedPreferences("Vibor_History", Context.MODE_PRIVATE);
+        currentMarshrut = sharedPreferences.getInt("ID", 1);
+    }
+
     // Остальные методы (onStart, onStop, onResume, setupBottomNavigation и т.д.)
     // остаются такими же как в вашем исходном коде, но с учетом новых полей
 
@@ -389,6 +395,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         startLocationUpdates();
+        //getCurrentMarshrut();
         if (themeChanged) {
             updateTheme();
             themeChanged = false;
@@ -404,6 +411,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        getCurrentMarshrut();
+        loadPointsData();
+        List<PointsData> points_a = data.getPoints();
+        currentTargetIndex = 0;
+        points = points_a.get(currentMarshrut - 1).getPointsarray();
+        for (PointArrayItem point : points) {
+            if (point.getComplete()) {
+                currentTargetIndex++;
+            } else {
+                break;
+            }
+        }
+        if (!points.isEmpty()) {
+            addAllMarkers();
+        }
         super.onStart();
         MapKitFactory.getInstance().onStart();
         mapView.onStart();
