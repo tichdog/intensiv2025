@@ -211,8 +211,8 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
                     if (!f1) {
                         currentRoute.addPoint(currentEditingPoint);
                         addPointMarker(currentEditingPoint);
+                        currentPointId++;
                     }
-                    currentPointId++;
                     pointsAdapter.notifyDataSetChanged();
 
                 })
