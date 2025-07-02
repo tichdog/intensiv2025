@@ -130,37 +130,36 @@ public class TestRun extends AppCompatActivity {
         Question question = currentTest.getQuestions().get(questionIndex);
 
         // Установка текста вопроса
-        setAdaptiveTextByLength(questionText, question.getText());
+        setAdaptiveTextByLengthQ(questionText, question.getText());
 
         // Установка вариантов ответов
         List<Option> options = question.getOptions();
-        setAdaptiveTextByLength(option1, options.get(0).getText());
-        setAdaptiveTextByLength(option2, options.get(1).getText());
-        setAdaptiveTextByLength(option3, options.get(2).getText());
-        setAdaptiveTextByLength(option4, options.get(3).getText());
+        setAdaptiveTextByLengthA(option1, options.get(0).getText());
+        setAdaptiveTextByLengthA(option2, options.get(1).getText());
+        setAdaptiveTextByLengthA(option3, options.get(2).getText());
+        setAdaptiveTextByLengthA(option4, options.get(3).getText());
 
         // Сброс фона кнопок к стандартному
         resetButtonBackgrounds();
     }
 
-    private void setAdaptiveTextByLength(TextView textView, String text) {
+    private void setAdaptiveTextByLengthA(TextView textView, String text) {
         // Устанавливаем базовые параметры
         float baseSizeSp = 24f; // Базовый размер шрифта
-        float minSizeSp = 12f;  // Минимальный допустимый размер
+        float minSizeSp = 10f;  // Минимальный допустимый размер
 
         // Определяем размер на основе длины текста
         float newSizeSp;
         if (text.length() < 20) {
             newSizeSp = baseSizeSp; // Короткий текст - базовый размер
-        }
-        else if (text.length() < 40) {
+        } else if (text.length() < 40) {
             newSizeSp = baseSizeSp - 6f; // Средний текст - немного меньше
-        }
-        else if (text.length() < 60) {
-            newSizeSp = baseSizeSp - 8f; // Длинный текст - еще меньше
-        }
-        else {
-            newSizeSp = baseSizeSp - 6f; // Очень длинный текст - минимально допустимый
+        } else if (text.length() < 60) {
+            newSizeSp = baseSizeSp - 10f; // Длинный текст - еще меньше
+        } else if (text.length() < 80) {
+            newSizeSp = baseSizeSp - 12f; // Длинный текст - еще меньше
+        } else {
+            newSizeSp = baseSizeSp - 14f; // Очень длинный текст - минимально допустимый
         }
 
         // Гарантируем, что размер не меньше минимального
@@ -169,8 +168,49 @@ public class TestRun extends AppCompatActivity {
         // Устанавливаем размер
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, newSizeSp);
         textView.setText(text);
+        int lineHeightPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                newSizeSp + 3,
+                getResources().getDisplayMetrics()
+        );
+
+        textView.setLineHeight(lineHeightPx);
     }
 
+
+    private void setAdaptiveTextByLengthQ(TextView textView, String text) {
+        // Устанавливаем базовые параметры
+        float baseSizeSp = 35f; // Базовый размер шрифта
+        float minSizeSp = 10f;  // Минимальный допустимый размер
+
+        // Определяем размер на основе длины текста
+        float newSizeSp;
+        if (text.length() < 20) {
+            newSizeSp = baseSizeSp; // Короткий текст - базовый размер
+        } else if (text.length() < 40) {
+            newSizeSp = baseSizeSp - 8f; // Средний текст - немного меньше
+        } else if (text.length() < 60) {
+            newSizeSp = baseSizeSp - 10f; // Длинный текст - еще меньше
+        } else if (text.length() < 80) {
+            newSizeSp = baseSizeSp - 12f; // Длинный текст - еще меньше
+        } else {
+            newSizeSp = baseSizeSp - 14f; // Очень длинный текст - минимально допустимый
+        }
+
+        // Гарантируем, что размер не меньше минимального
+        newSizeSp = Math.max(newSizeSp, minSizeSp);
+
+        // Устанавливаем размер
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, newSizeSp);
+        textView.setText(text);
+        int lineHeightPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                newSizeSp + 3,
+                getResources().getDisplayMetrics()
+        );
+
+        textView.setLineHeight(lineHeightPx);
+    }
 
     private void resetButtonBackgrounds() {
         option1.setBackgroundResource(R.drawable.test_item_rectangle);
