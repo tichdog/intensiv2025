@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKitFactory;
@@ -46,12 +47,12 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     private MapView mapView;
     private RootData routesRoot;
     private PointsData currentRoute;
-    private int currentPointId = 1;
+    private int currentPointId = 0;
     private int currentRouteId = 1;
     RootData data;
 
 
-    private EditText routeIdEditText;
+    private TextView routeIdEditText;
     private EditText routeNameEditText;
     private Button saveRouteButton;
     private RecyclerView pointsRecyclerView;
@@ -79,6 +80,15 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         loadPointsData();
+
+        if (data != null && data.getPoints() != null && !data.getPoints().isEmpty()) {
+            currentRouteId = data.getPoints().stream()
+                    .mapToInt(PointsData::getId)
+                    .max()
+                    .orElse(0) + 1;
+        } else {
+            currentRouteId = 1;
+        }
 
         // Инициализация MapView
         mapView = findViewById(R.id.mapView);
@@ -111,9 +121,9 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     }
 
     private void createNewRoute() {
-        currentRoute = new PointsData(currentRouteId++, "Новый маршрут");
+        currentRoute = new PointsData(currentRouteId, "Новый маршрут");
         routesRoot.addRoute(currentRoute);
-        routeIdEditText.setText(String.valueOf(currentRoute.getId()));
+        routeIdEditText.setText("ID маршрута: " + currentRouteId);
         routeNameEditText.setText(currentRoute.getName());
     }
 
@@ -123,8 +133,9 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
             lastTapTime = System.currentTimeMillis();
             // Ваш код добавления точки
 
+            currentPointId++;
             PointArrayItem newPoint = new PointArrayItem(
-                    currentPointId++,
+                    currentPointId,
                     "Точка " + currentPointId,
                     point.getLatitude(),
                     point.getLongitude()
@@ -177,7 +188,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
 
     private void saveRoutes() {
         try {
-            int id = Integer.parseInt(routeIdEditText.getText().toString());
+            int id = currentRouteId;
             String name = routeNameEditText.getText().toString();
             currentRoute.setId(id);
             currentRoute.setName(name);
@@ -280,7 +291,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) { //обновление точки будет тут
             PointArrayItem point = currentRoute.getPointsarray().get(position);
             holder.titleTextView.setText(point.getTitle());
             holder.positionTextView.setText(String.format("Ш: %.6f, Д: %.6f", point.getLat(), point.getLng()));
@@ -291,7 +302,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
                         new Animation(Animation.Type.SMOOTH, 0.3f),
                         null
                 );
-                showPointDialog(point);
+                //showPointDialog(point);
             });
         }
 
