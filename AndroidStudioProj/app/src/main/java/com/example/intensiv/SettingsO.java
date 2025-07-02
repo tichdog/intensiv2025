@@ -84,6 +84,11 @@ public class SettingsO extends AppCompatActivity {
             startActivity(new Intent(SettingsO.this, CreateRouteActivity.class));
             finish();
         });
+        Button btn1 = findViewById(R.id.user_strory_show);
+        btn1.setOnClickListener(v -> {
+            startActivity(new Intent(SettingsO.this, ShowAllHistories.class));
+            finish();
+        });
     }
 
     private void recreateActivity() {

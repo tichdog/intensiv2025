@@ -154,10 +154,10 @@ public class TestRun extends AppCompatActivity {
             newSizeSp = baseSizeSp; // Короткий текст - базовый размер
         }
         else if (text.length() < 40) {
-            newSizeSp = baseSizeSp - 2f; // Средний текст - немного меньше
+            newSizeSp = baseSizeSp - 6f; // Средний текст - немного меньше
         }
         else if (text.length() < 60) {
-            newSizeSp = baseSizeSp - 4f; // Длинный текст - еще меньше
+            newSizeSp = baseSizeSp - 8f; // Длинный текст - еще меньше
         }
         else {
             newSizeSp = baseSizeSp - 6f; // Очень длинный текст - минимально допустимый

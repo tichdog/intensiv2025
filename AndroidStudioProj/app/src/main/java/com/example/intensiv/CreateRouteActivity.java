@@ -2,6 +2,9 @@ package com.example.intensiv;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +37,7 @@ import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.mapview.MapView;
 import com.yandex.runtime.image.ImageProvider;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -49,7 +54,6 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     private PointsData currentRoute;
     private int currentPointId = 0;
     private int currentRouteId = 1;
-    RootData data;
 
 
     private TextView routeIdEditText;
@@ -81,8 +85,8 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         }
         loadPointsData();
 
-        if (data != null && data.getPoints() != null && !data.getPoints().isEmpty()) {
-            currentRouteId = data.getPoints().stream()
+        if (routesRoot != null && routesRoot.getPoints() != null && !routesRoot.getPoints().isEmpty()) {
+            currentRouteId = routesRoot.getPoints().stream()
                     .mapToInt(PointsData::getId)
                     .max()
                     .orElse(0) + 1;
@@ -101,7 +105,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         pointsRecyclerView = findViewById(R.id.pointsRecyclerView);
 
         // Инициализация данных
-        routesRoot = new RootData();
+        //routesRoot = new RootData();
         createNewRoute();
 
         // Настройка RecyclerView
@@ -153,21 +157,39 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_point_edit, null);
 
         EditText titleEditText = dialogView.findViewById(R.id.titleEditText);
-        //EditText showEditText = dialogView.findViewById(R.id.showEditText);
         EditText shrtEditText = dialogView.findViewById(R.id.shrtEditText);
         EditText descriptionEditText = dialogView.findViewById(R.id.descriptionEditText);
 
         titleEditText.setText(point.getTitle());
-        //showEditText.setText(point.getShow());
         shrtEditText.setText(point.getShort());
         descriptionEditText.setText(point.getDescription());
+
+
+        // существующие поля
+        Button addPhotoButton = dialogView.findViewById(R.id.addPhotoButton);
+        ImageView photoPreview = dialogView.findViewById(R.id.photoPreview);
+
+        // если есть изображение, показываем его
+        if (point.getImagePath() != null && !point.getImagePath().isEmpty()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(point.getImagePath());
+            photoPreview.setImageBitmap(bitmap);
+        }
+
+        addPhotoButton.setOnClickListener(v -> {
+            // Запускаем Intent для выбора изображения
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+                    REQUEST_IMAGE_PICK + point.getId());
+        });
+
+
 
         new MaterialAlertDialogBuilder(this)
                 .setTitle("Редактирование точки")
                 .setView(dialogView)
                 .setPositiveButton("Сохранить", (dialog, which) -> {
                     point.setTitle(titleEditText.getText().toString());
-                    //point.setShow(showEditText.getText().toString());
                     point.setShrt(shrtEditText.getText().toString());
                     point.setDescription(descriptionEditText.getText().toString());
 
@@ -248,7 +270,8 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         try {
             FileInputStream fis = openFileInput("points1.json");
             InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-            data = new Gson().fromJson(isr, RootData.class);
+            routesRoot = new Gson().fromJson(isr, RootData.class);
+
             isr.close();
         } catch (FileNotFoundException e) {
             try {
@@ -258,7 +281,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
                 is.read(buffer);
                 is.close();
                 String json = new String(buffer, StandardCharsets.UTF_8);
-                data = new Gson().fromJson(json, RootData.class);
+                routesRoot = new Gson().fromJson(json, RootData.class);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -328,5 +351,52 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         overridePendingTransition(0, 0);
         startActivity(new Intent(this, SettingsO.class));
         return true;
+    }
+
+    private static final int REQUEST_IMAGE_PICK = 1000;
+    private PointArrayItem currentEditingPoint;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+
+            // Получаем ID точки из requestCode
+            int pointId = requestCode - REQUEST_IMAGE_PICK;
+
+            // Находим точку в текущем маршруте
+            for (PointArrayItem point : currentRoute.getPointsarray()) {
+                if (point.getId() == pointId) {
+                    try {
+                        // Сохраняем изображение во внутреннее хранилище
+                        String imagePath = saveImageToInternalStorage(imageUri, "point_" + pointId);
+                        point.setImagePath(imagePath);
+
+                        // Обновляем адаптер
+                        pointsAdapter.notifyDataSetChanged();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Ошибка загрузки изображения", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    private String saveImageToInternalStorage(Uri imageUri, String fileName) throws IOException {
+        InputStream inputStream = getContentResolver().openInputStream(imageUri);
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+        File directory = getDir("point_images", MODE_PRIVATE);
+        File imageFile = new File(directory, fileName + ".jpg");
+
+        FileOutputStream fos = new FileOutputStream(imageFile);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+        fos.close();
+
+        return imageFile.getAbsolutePath();
     }
 }

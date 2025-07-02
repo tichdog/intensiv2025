@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,16 +8,16 @@
     <!-- Toolbar вверху -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
+        style="@style/CustomToolbarStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/toolBarColor"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:fontFamily="@font/kyivtypetitling1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:title="Настройки"
-        style="@style/CustomToolbarStyle"
-        app:titleTextColor="?attr/textToolBarColor"/>
+        app:titleTextColor="?attr/textToolBarColor" />
 
     <!-- Контейнер для основного содержимого -->
     <ScrollView
@@ -26,10 +25,10 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav_1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,44 +39,44 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Выбрать тему"
-                android:textSize="18sp"
                 android:textColor="?attr/settingtextcolor"
-                android:layout_marginBottom="8dp"/>
+                android:textSize="18sp" />
 
             <RadioGroup
                 android:id="@+id/themeRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="24dp"
+                android:orientation="vertical">
 
                 <RadioButton
                     android:id="@+id/lightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Светлая тема"
                     android:textColor="?attr/settingtextcolor"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="16sp" />
 
                 <RadioButton
                     android:id="@+id/darkTheme"
                     android:layout_width="match_parent"
-                    android:textColor="?attr/settingtextcolor"
                     android:layout_height="wrap_content"
                     android:text="Тёмная тема"
-                    android:textSize="16sp"/>
+                    android:textColor="?attr/settingtextcolor"
+                    android:textSize="16sp" />
             </RadioGroup>
 
             <!-- Новый раздел с кнопками глав -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Главы истории"
-                android:textSize="18sp"
                 android:textColor="?attr/settingtextcolor"
-                android:layout_marginBottom="8dp"/>
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -87,37 +86,42 @@
                 <Button
                     android:id="@+id/chapter1_btn"
                     style="@style/ChapterButtonStyle"
-                    android:text="1. Встреча у памятника Бобке"/>
+                    android:text="1. Встреча у памятника Бобке" />
 
                 <Button
                     android:id="@+id/chapter2_btn"
                     style="@style/ChapterButtonStyle"
-                    android:text="2. Сусанинская площадь"/>
+                    android:text="2. Сусанинская площадь" />
 
                 <Button
                     android:id="@+id/chapter3_btn"
                     style="@style/ChapterButtonStyle"
-                    android:text="3. Памятник ювелиру"/>
+                    android:text="3. Памятник ювелиру" />
 
                 <Button
                     android:id="@+id/chapter4_btn"
                     style="@style/ChapterButtonStyle"
-                    android:text="4. Памятник Любви"/>
+                    android:text="4. Памятник Любви" />
 
                 <Button
                     android:id="@+id/chapter5_btn"
                     style="@style/ChapterButtonStyle"
-                    android:text="5. Дом на Дзержинского"/>
+                    android:text="5. Дом на Дзержинского" />
 
                 <Button
                     android:id="@+id/chapter6_btn"
                     style="@style/ChapterButtonStyle"
-                    android:text="6. Финал: Воссоединение"/>
+                    android:text="6. Финал: Воссоединение" />
 
                 <Button
                     android:id="@+id/user_strory"
                     style="@style/ChapterButtonStyle"
-                    android:text="Пользовательские истории"/>
+                    android:text="Пользовательские истории" />
+
+                <Button
+                    android:id="@+id/user_strory_show"
+                    style="@style/ChapterButtonStyle"
+                    android:text="Показать истории" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -125,16 +129,16 @@
     <!-- BottomNavigationView внизу экрана -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_1"
+        style="@style/BottomNavigationStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:menu="@menu/bottom_nav_menu_light"
-        style="@style/BottomNavigationStyle"
-        app:labelVisibilityMode="labeled"
+        android:background="?attr/menuColor"
         app:itemIconTint="@drawable/bottom_nav_colors"
-        app:itemTextColor="@drawable/bottom_nav_colors"
         app:itemRippleColor="?attr/menuItemColorActive"
-        android:background="?attr/menuColor"/>
+        app:itemTextColor="@drawable/bottom_nav_colors"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu_light" />
 </androidx.constraintlayout.widget.ConstraintLayout>
