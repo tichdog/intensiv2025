@@ -5,7 +5,7 @@
       "title": "Встреча у памятника Бобке",
       "description": "Описание теста или дополнительная информация",
       "completion_percentage": 0,
-      "background_image": "img",
+      "background_image": "i1",
       "status_image": "test_no_complete",
       "questions": [
         {
@@ -145,7 +145,7 @@
       "title": "Сусанинская площадь",
       "description": "Описание теста или дополнительная информация",
       "completion_percentage": 0,
-      "background_image": "img",
+      "background_image": "i2",
       "status_image": "test_no_complete",
       "questions": [
         {
@@ -285,7 +285,7 @@
       "title": "Ювелир-Кустарь",
       "description": "Описание теста или дополнительная информация",
       "completion_percentage": 0,
-      "background_image": "img",
+      "background_image": "i3",
       "status_image": "test_no_complete",
       "questions": [
         {
@@ -425,7 +425,7 @@
       "title": "Памятник Любви",
       "description": "Описание теста или дополнительная информация",
       "completion_percentage": 0,
-      "background_image": "img",
+      "background_image": "i4",
       "status_image": "test_no_complete",
       "questions": [
         {
@@ -565,7 +565,7 @@
       "title": "Дом на Дзержинского",
       "description": "Описание теста или дополнительная информация",
       "completion_percentage": 0,
-      "background_image": "img",
+      "background_image": "i5",
       "status_image": "test_no_complete",
       "questions": [
         {
