@@ -59,8 +59,8 @@
             android:textAppearance="@style/zast_text_upper"
             android:gravity="top|center_horizontal"
             android:fontFamily="@font/kyivtypetitling1"
-            android:lineHeight="20sp"
-            android:padding="8dp"
+            android:lineHeight="18sp"
+            android:padding="4dp"
             android:scrollbars="vertical"
             android:overScrollMode="never"/>
     </FrameLayout>
