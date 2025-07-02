@@ -121,9 +121,9 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     }
 
     private void createNewRoute() {
-        currentRoute = new PointsData(currentRouteId++, "Новый маршрут");
+        currentRoute = new PointsData(currentRouteId, "Новый маршрут");
         routesRoot.addRoute(currentRoute);
-        routeIdEditText.setText("ID маршрута: " + String.valueOf(currentRoute.getId()));
+        routeIdEditText.setText("ID маршрута: " + currentRouteId);
         routeNameEditText.setText(currentRoute.getName());
     }
 
