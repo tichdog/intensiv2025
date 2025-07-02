@@ -166,22 +166,22 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
 
 
         // существующие поля
-        Button addPhotoButton = dialogView.findViewById(R.id.addPhotoButton);
-        ImageView photoPreview = dialogView.findViewById(R.id.photoPreview);
+        //Button addPhotoButton = dialogView.findViewById(R.id.addPhotoButton);
+        //ImageView photoPreview = dialogView.findViewById(R.id.photoPreview);
 
         // если есть изображение, показываем его
-        if (point.getImagePath() != null && !point.getImagePath().isEmpty()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(point.getImagePath());
-            photoPreview.setImageBitmap(bitmap);
-        }
-
-        addPhotoButton.setOnClickListener(v -> {
-            // Запускаем Intent для выбора изображения
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("image/*");
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"),
-                    REQUEST_IMAGE_PICK + point.getId());
-        });
+//        if (point.getImagePath() != null && !point.getImagePath().isEmpty()) {
+//            Bitmap bitmap = BitmapFactory.decodeFile(point.getImagePath());
+//            photoPreview.setImageBitmap(bitmap);
+//        }
+//
+//        addPhotoButton.setOnClickListener(v -> {
+//            // Запускаем Intent для выбора изображения
+//            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//            intent.setType("image/*");
+//            startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+//                    REQUEST_IMAGE_PICK + point.getId());
+//        });
 
 
 

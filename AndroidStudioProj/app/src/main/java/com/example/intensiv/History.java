@@ -7,12 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
@@ -40,10 +41,9 @@ public class History extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        LinearLayout container = findViewById(R.id.storiesContainer);
+        ViewGroup container = findViewById(R.id.storiesContainer);
 
         try {
-            // Загрузка данных из JSON
             InputStreamReader reader = new InputStreamReader(getAssets().open("points.json"));
             RootData data = new Gson().fromJson(reader, RootData.class);
             List<PointsData> points_a = data.getPoints();
@@ -63,10 +63,8 @@ public class History extends AppCompatActivity {
             public void handleOnBackPressed() {
                 finish();
                 overridePendingTransition(0, 0);
-
             }
         });
-
     }
 
     private View createStoryCard(PointArrayItem point, ViewGroup parent) {
@@ -75,11 +73,12 @@ public class History extends AppCompatActivity {
 
         TextView textView = card.findViewById(R.id.title_text);
         TextView opisanie = card.findViewById(R.id.opis);
-        ImageButton img = card.findViewById(R.id.history_open);
+        ImageView img = card.findViewById(R.id.history_open);
+        ConstraintLayout cardRoot = card.findViewById(R.id.card_root);
 
         textView.setText(point.getTitle());
         opisanie.setText(point.getShort());
-        // Загрузка изображения
+
         int resId = context.getResources().getIdentifier(
                 point.getShow(),
                 "drawable",
@@ -89,20 +88,24 @@ public class History extends AppCompatActivity {
             img.setImageResource(resId);
         }
 
-        // Передача данных в HistoryDescription
-        img.setOnClickListener(v -> {
+        // Общий обработчик клика для всей карточки и изображения
+        View.OnClickListener clickListener = v -> {
             Intent intent = new Intent(this, HistoryDescription.class);
             intent.putExtra("title", point.getTitle());
             intent.putExtra("description", point.getDescription());
-            intent.putExtra("image", point.getShow());  // Передаем имя файла изображения
+            intent.putExtra("image", point.getShow());
             startActivity(intent);
             overridePendingTransition(0, 0);
             finish();
-        });
+        };
+
+        img.setOnClickListener(clickListener);
+        cardRoot.setOnClickListener(clickListener);
 
         return card;
     }
 
+    // Остальные методы остаются без изменений
     private void setupBottomNavigation() {
         btNav.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -138,6 +141,7 @@ public class History extends AppCompatActivity {
             setTheme(R.style.Theme_App_Light);
         }
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         finish();
