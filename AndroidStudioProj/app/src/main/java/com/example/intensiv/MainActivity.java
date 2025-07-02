@@ -65,7 +65,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
-    private static final double MIN_DISTANCE_UPDATE = 10; // метров
+    private static final double MIN_DISTANCE_UPDATE = 5; // метров
     private static final double TARGET_REACHED_DISTANCE = 15; // метров
 
     private UserLocationLayer userLocationLayer;
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private Point lastRoutePoint;
     private int currentTargetIndex = 0;
     RootData data;
-    int currentMarshrut = 1;
+    int currentMarshrut = -1;
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
