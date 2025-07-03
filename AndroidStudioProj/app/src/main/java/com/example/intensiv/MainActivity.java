@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -53,6 +54,7 @@ import com.yandex.mapkit.user_location.UserLocationLayer;
 import com.yandex.runtime.Error;
 import com.yandex.runtime.image.ImageProvider;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -416,6 +418,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        copyFileFromAssets("points1.json");
         if (needChangeMarshrut()) {
             loadPointsData();
             List<PointsData> points_a = data.getPoints();
@@ -565,6 +568,35 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void copyFileFromAssets(String filename) {
+        File internalFile = new File(getFilesDir(), filename);
+
+        // Если файл уже существует - пропускаем копирование
+        if (internalFile.exists()) return;
+
+        try {
+            // Открываем поток из assets
+            InputStream is = getAssets().open(filename);
+            // Создаем поток для записи
+            FileOutputStream fos = new FileOutputStream(internalFile);
+
+            // Копируем данные
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                fos.write(buffer, 0, length);
+            }
+
+            // Закрываем потоки
+            fos.close();
+            is.close();
+
+            Log.d("FILE", "Файл скопирован из assets в: " + internalFile.getAbsolutePath());
+        } catch (IOException e) {
+            Log.e("FILE", "Ошибка копирования файла", e);
         }
     }
 }

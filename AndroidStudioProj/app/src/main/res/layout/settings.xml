@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/customBackground">
 
     <!-- Toolbar вверху -->
@@ -126,6 +127,48 @@
                     android:id="@+id/user_strory_show"
                     style="@style/ChapterButtonStyle"
                     android:text="Показать истории" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center">
+
+                <!-- Кнопка для загрузки файла НА сервер -->
+                <Button
+                    android:id="@+id/btnUpload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Загрузить файл на сервер"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Кнопка для скачивания файла С сервера -->
+                <Button
+                    android:id="@+id/btnDownload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Скачать файл с сервера"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Прогресс бар -->
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:outlineAmbientShadowColor="#FF0000"
+                    android:outlineSpotShadowColor="#5656F2"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
+                <!-- Текст статуса -->
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="Выберите действие"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

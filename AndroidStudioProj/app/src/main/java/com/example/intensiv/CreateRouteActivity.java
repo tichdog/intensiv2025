@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +50,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class CreateRouteActivity extends AppCompatActivity implements InputListener {
     private BottomNavigationView btNav;
@@ -399,7 +411,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
             if (currentEditingPoint != null) {
                 try {
                     // Сохраняем изображение и обновляем точку
-                    String imagePath = saveImageToInternalStorage(imageUri, "point_" + currentEditingPoint.getId());
+                    String imagePath = saveImageToInternalStorage(imageUri, "point_" + currentRoute.getId() + currentEditingPoint.getId());
                     currentEditingPoint.setShow(imagePath);
 
 
@@ -447,7 +459,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         File imageFile = new File(directory, fileName + ".jpg");
 
         FileOutputStream fos = new FileOutputStream(imageFile);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, fos);
         fos.close();
 
         return imageFile.getAbsolutePath();

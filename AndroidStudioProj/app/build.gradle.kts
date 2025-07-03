@@ -36,6 +36,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.yandex.android:maps.mobile:4.16.0-full")
+    implementation ("commons-net:commons-net:3.9.0")  // Apache Commons Net для FTP
+    implementation ("org.apache.commons:commons-io:1.3.2")  // Для работы с файлами
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
