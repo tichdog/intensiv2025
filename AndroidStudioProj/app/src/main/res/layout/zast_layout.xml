@@ -5,7 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/zast_light_back">
+    android:background="@drawable/zast_back_light">
 
     <!-- Горизонтальные направляющие -->
     <androidx.constraintlayout.widget.Guideline
@@ -51,7 +51,7 @@
         android:layout_marginEnd="8dp">
 
         <TextView
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:id="@+id/some_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -59,8 +59,8 @@
             android:textAppearance="@style/zast_text_upper"
             android:gravity="top|center_horizontal"
             android:fontFamily="@font/kyivtypetitling1"
-            android:lineHeight="18sp"
-            android:padding="4dp"
+            android:lineHeight="20sp"
+            android:padding="8dp"
             android:scrollbars="vertical"
             android:overScrollMode="never"/>
     </FrameLayout>
@@ -70,8 +70,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/dog"
-        app:layout_constraintWidth_percent="0.9"
-        app:layout_constraintDimensionRatio="1:1.1"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintDimensionRatio="1:1.3"
         app:layout_constraintTop_toTopOf="@id/guideline_middle"
         app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
         app:layout_constraintStart_toStartOf="parent"

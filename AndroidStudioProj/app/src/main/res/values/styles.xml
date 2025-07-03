@@ -48,7 +48,7 @@
         <item name="menuItemColor">#1A212B</item>
         <item name="menuItemColorActive">#A0F4EF</item>
         <item name="backHistAct">#8585FF</item>
-        <item name="zast_back">@drawable/zast_light_back</item>
+        <item name="zast_back">@drawable/zast_back_light</item>
     </style>
 
     <!-- Тёмная тема -->
