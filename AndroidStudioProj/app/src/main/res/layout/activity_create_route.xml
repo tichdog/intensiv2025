@@ -131,9 +131,10 @@
                         android:layout_height="wrap_content"
                         android:text="Точки маршрута"
                         android:fontFamily="@font/kyivtypetitling1"
-                        android:textSize="16sp"
-                        android:padding="16dp"
-                        android:paddingBottom="8dp"/>
+                        android:textSize="20sp"
+                        android:paddingStart="16dp"
+                        android:paddingTop="16dp"
+                        android:textColor="@color/white"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/pointsRecyclerView"
