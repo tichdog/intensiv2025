@@ -234,7 +234,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     private void addPointMarker(PointArrayItem point) {
         MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
         PlacemarkMapObject marker = mapObjects.addPlacemark(new Point(point.getLat(), point.getLng()));
-        marker.setIcon(ImageProvider.fromResource(this, R.drawable.ic_map_light));
+        marker.setIcon(ImageProvider.fromResource(this, R.drawable.point_map));
         marker.setUserData(point);
     }
 

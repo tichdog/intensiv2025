@@ -6,7 +6,7 @@
     </style>
     <style name="zast_text_bottom">
         <item name="android:textSize">25sp</item>
-        <item name="android:textColor">#535353</item>
+        <item name="android:textColor">#F8F9FA</item>
     </style>
 
     <style name="CustomRadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
