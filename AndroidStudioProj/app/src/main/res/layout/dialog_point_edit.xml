@@ -1,61 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp">
 
+        <!-- Название точки -->
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
+            android:id="@+id/titleInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Название точки">
+            android:hint="Название точки"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/titleEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kyivtypetitling1"
+                android:textColor="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Краткое описание -->
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
+            android:id="@+id/shrtInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Краткое описание">
+            android:hint="Краткое описание"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/shrtEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kyivtypetitling1"
+                android:textColor="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Полное описание -->
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
+            android:id="@+id/descriptionInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Полное описание">
+            android:hint="Полное описание"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/shrtInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/descriptionEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/kyivtypetitling1"
                 android:inputType="textMultiLine"
-                android:minLines="3" />
+                android:minLines="3"
+                android:textColor="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
+        <!-- Кнопка добавления фото -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/addPhotoButton"
-            android:layout_width="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Добавить фото" />
+            android:layout_marginTop="24dp"
+            android:text="Добавить фото"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/descriptionInputLayout"
+            app:strokeColor="@color/white"/>
 
-        <ImageView
-            android:id="@+id/photoPreview"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="8dp"
-            android:scaleType="centerCrop" />
-    </LinearLayout>
+        <!-- Превью фото -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/photoCard"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addPhotoButton"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp"
+            app:cardBackgroundColor="@color/dark_background"
+            app:cardPreventCornerOverlap="false">
+
+            <ImageView
+                android:id="@+id/photoPreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="Превью фотографии"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"
+                android:outlineProvider="bounds"/>
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
