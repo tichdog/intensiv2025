@@ -67,10 +67,10 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="8dp"
-                >
+                app:cardBackgroundColor="?attr/menuColor">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -82,7 +82,7 @@
                         android:id="@+id/routeIdEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:fontFamily="@font/kyivtypetitling1"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     </com.google.android.material.textview.MaterialTextView>
@@ -97,16 +97,18 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/routeNameEditText"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/kyivtypetitling1"
+                            />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/saveRouteButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:text="Сохранить маршрут"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        style="@style/CustomButtonStyle"
                         app:iconTint="?attr/colorPrimary"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -117,7 +119,7 @@
                 android:layout_height="wrap_content"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="8dp"
-                >
+                app:cardBackgroundColor="?attr/menuColor">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -128,7 +130,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Точки маршрута"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:fontFamily="@font/kyivtypetitling1"
+                        android:textSize="16sp"
                         android:padding="16dp"
                         android:paddingBottom="8dp"/>
 
