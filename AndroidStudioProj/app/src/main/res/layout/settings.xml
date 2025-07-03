@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Выбрать тему"
+                android:fontFamily="@font/kyivtypetitling1"
                 android:textColor="?attr/settingtextcolor"
                 android:textSize="18sp" />
 
@@ -48,25 +49,27 @@
                 android:id="@+id/themeRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:orientation="vertical">
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical"
+                >
 
                 <RadioButton
                     android:id="@+id/lightTheme"
+                    style="@style/CustomRadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="Светлая тема"
-                    android:textColor="?attr/settingtextcolor"
-                    android:textSize="16sp" />
+                    android:fontFamily="@font/kyivtypetitling1"
+                    android:textSize="16sp"
+                    android:text="Светлая тема" />
 
                 <RadioButton
                     android:id="@+id/darkTheme"
+                    style="@style/CustomRadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Тёмная тема"
-                    android:textColor="?attr/settingtextcolor"
-                    android:textSize="16sp" />
+                    android:fontFamily="@font/kyivtypetitling1"
+                    android:textSize="16sp"
+                    android:text="Тёмная тема" />
             </RadioGroup>
 
             <!-- Новый раздел с кнопками глав -->
@@ -74,6 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:fontFamily="@font/kyivtypetitling1"
                 android:text="Главы истории"
                 android:textColor="?attr/settingtextcolor"
                 android:textSize="18sp" />
