@@ -78,14 +78,13 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/routeIdEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/kyivtypetitling1"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    </com.google.android.material.textview.MaterialTextView>
+<!--                    <com.google.android.material.textview.MaterialTextView-->
+<!--                        android:id="@+id/routeIdEditText"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/kyivtypetitling1"-->
+<!--                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">-->
+<!--                    </com.google.android.material.textview.MaterialTextView>-->
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"

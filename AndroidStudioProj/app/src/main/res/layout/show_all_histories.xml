@@ -27,14 +27,16 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav_1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        >
 
         <!-- Контейнер теперь вертикальный -->
         <LinearLayout
             android:id="@+id/storiesContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">  <!-- Изменили на vertical -->
+            android:orientation="vertical"
+            >  <!-- Изменили на vertical -->
 
             <!-- Карточки будут добавляться вертикально -->
 

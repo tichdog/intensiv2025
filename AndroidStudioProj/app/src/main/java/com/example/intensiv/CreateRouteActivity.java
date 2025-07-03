@@ -58,7 +58,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     private int currentRouteId = 1;
 
 
-    private TextView routeIdEditText;
+    //private TextView routeIdEditText;
     private EditText routeNameEditText;
     private Button saveRouteButton;
     private RecyclerView pointsRecyclerView;
@@ -103,7 +103,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
         mapView.getMap().addInputListener(this);
 
         // Инициализация UI элементов
-        routeIdEditText = findViewById(R.id.routeIdEditText);
+        //routeIdEditText = findViewById(R.id.routeIdEditText);
         routeNameEditText = findViewById(R.id.routeNameEditText);
         saveRouteButton = findViewById(R.id.saveRouteButton);
         pointsRecyclerView = findViewById(R.id.pointsRecyclerView);
@@ -141,7 +141,7 @@ public class CreateRouteActivity extends AppCompatActivity implements InputListe
     private void createNewRoute() {
         currentRoute = new PointsData(currentRouteId, "Новый маршрут");
         routesRoot.addRoute(currentRoute);
-        routeIdEditText.setText("ID маршрута: " + currentRouteId);
+        //routeIdEditText.setText("ID маршрута: " + currentRouteId);
         routeNameEditText.setText(currentRoute.getName());
     }
 

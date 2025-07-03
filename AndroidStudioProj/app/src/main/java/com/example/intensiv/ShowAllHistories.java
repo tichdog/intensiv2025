@@ -97,10 +97,10 @@ public class ShowAllHistories extends AppCompatActivity {
         }
 
         TextView textView = card.findViewById(R.id.title_text);
-        TextView opisanie = card.findViewById(R.id.id_text);
+        //TextView opisanie = card.findViewById(R.id.id_text);
 
         textView.setText(point.getName());
-        opisanie.setText(String.valueOf(point.getId()));
+        //opisanie.setText(String.valueOf(point.getId()));
         card.setOnClickListener(v -> {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt("ID", point.getId());
