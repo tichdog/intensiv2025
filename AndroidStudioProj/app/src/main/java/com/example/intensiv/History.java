@@ -113,7 +113,7 @@ public class History extends AppCompatActivity {
             intent.putExtra("title", point.getTitle());
             intent.putExtra("description", point.getDescription());
             intent.putExtra("image", point.getShow());
-            intent.putExtra("currentM", point.getId());
+            intent.putExtra("currentM", currentMarshrut);
             startActivity(intent);
             overridePendingTransition(0, 0);
             finish();
