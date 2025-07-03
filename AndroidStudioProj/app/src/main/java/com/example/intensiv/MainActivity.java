@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
         Point yandexPoint = new Point(point.getLat(), point.getLng());
 
         PlacemarkMapObject marker = mapObjects.addPlacemark(yandexPoint);
-        marker.setIcon(ImageProvider.fromResource(this, R.drawable.ic_history_light));
+        marker.setIcon(ImageProvider.fromResource(this, R.drawable.point_map));
         marker.setUserData(point.getTitle());
 
     }
