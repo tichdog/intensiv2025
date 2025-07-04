@@ -141,6 +141,7 @@
                     android:id="@+id/btnUpload"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/ChapterButtonStyle"
                     android:text="Загрузить файл на сервер"
                     android:layout_marginBottom="16dp"/>
 
@@ -149,6 +150,7 @@
                     android:id="@+id/btnDownload"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/ChapterButtonStyle"
                     android:text="Скачать файл с сервера"
                     android:layout_marginBottom="16dp"/>
 
@@ -167,8 +169,11 @@
                     android:id="@+id/tvStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Выберите действие"/>
+                    android:layout_marginBottom="8dp"
+                    android:text="Выберите действие"
+                    android:fontFamily="@font/kyivtypetitling1"
+                    android:textColor="?attr/settingtextcolor"
+                    android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
